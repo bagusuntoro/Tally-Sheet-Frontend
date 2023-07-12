@@ -49,9 +49,9 @@ const router = createRouter({
       props: true // Mengaktifkan pengiriman props sebagai parameter
     },
     {
-      path: '/admin-add-tumpukan/:id', // Menambahkan parameter :id
-      name: 'admin-addBarangTumpukan',
-      component: () => import('../views/admin/AddBarangTumpukanView.vue'),
+      path: '/admin-input-tumpukan/:id', // Menambahkan parameter :id
+      name: 'admin-InputTumpukan',
+      component: () => import('../views/admin/InputTumpukanView.vue'),
       props: true // Mengaktifkan pengiriman props sebagai parameter
     },
     {
