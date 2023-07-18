@@ -1,89 +1,133 @@
+<script setup>
+import Sidebar from "../../components/Sidebar.vue";
+import Navbar from "../../components/Navbar.vue";
+import Footer from "../../components/Footer.vue";
+</script>
 <template>
-  <div>
-    <h1 class="text-center mt-3 mb-5">Update Data Barang</h1>
-    <form @submit.prevent="updateBarang">
-      <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-          <div class="mb-3">
-            <label for="jenis_barang" class="form-label">Jenis Barang</label>
-            <input
-              type="text"
-              class="form-control"
-              id="jenis_barang"
-              placeholder="Masukkan jenis barang"
-              v-model="barang.jenis_barang"
-            />
-          </div>
-        </div>
-        <div class="col-sm-2"></div>
-      </div>
+  <div id="wrapper">
+    <Sidebar />
 
-      <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <Navbar />
+
+        <!-- Begin Page Content -->
+        <h1 class="text-center mt-3 mb-5">Update Data Barang</h1>
+        <form @submit.prevent="updateBarang">
           <div class="row">
-            <div class="col-sm-6">
-              <router-link
-                to="/admin-barang"
-                class="btn btn-outline-danger mb-5"
-              >
-                Kembali
-              </router-link>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+              <div class="mb-3">
+                <label for="jenis_barang" class="form-label"
+                  >Jenis Barang</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="jenis_barang"
+                  placeholder="Masukkan jenis barang"
+                  v-model="barang.jenis_barang"
+                />
+              </div>
             </div>
-            <div class="col-sm-6">
-              <button
-                type="submit"
-                class="btn btn-outline-primary float-end"
-              >
-                Update
-              </button>
-            </div>
+            <div class="col-sm-2"></div>
           </div>
-        </div>
-        <div class="col-sm-2"></div>
+
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-6">
+                  <router-link
+                    to="/admin-barang"
+                    class="btn btn-danger mb-5"
+                  >
+                    Kembali
+                  </router-link>
+                </div>
+                <div class="col-sm-6">
+                  <button
+                    type="submit"
+                    class="btn btn-primary float-end"
+                  >
+                    Update
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2"></div>
+          </div>
+        </form>
+        <!-- /.container-fluid -->
       </div>
-    </form>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <Footer />
+      <!-- End of Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  props: ['id'], // Tambahkan properti 'id' untuk menerima ID dari parameter rute
+  props: ["id"], // Tambahkan properti 'id' untuk menerima ID dari parameter rute
 
   data() {
     return {
-      barang:[],
+      barang: [],
     };
   },
   methods: {
     updateBarang() {
       let formData = new FormData();
       formData.append("jenis_barang", this.barang.jenis_barang);
-      console.log('test',formData)
+      console.log("test", formData);
       axios
-        .post(`http://localhost:8080/api/update-barang/${this.id}`, formData) // Gunakan properti 'id' sebagai bagian dari URL endpoint
+        .put(`http://localhost:8000/api/auth/barang/${this.id}`, formData,{
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        }) // Gunakan properti 'id' sebagai bagian dari URL endpoint
         .then((response) => {
           console.log(response.data);
           this.showAlert();
-          this.$router.push('/admin-barang');
+          this.$router.push("/admin-barang");
         })
         .catch((error) => {
           console.error(error);
         });
     },
     showAlert() {
-      this.$swal('Data berhasil diperbarui!').then(() => {
+      this.$swal("Data berhasil diperbarui!").then(() => {
         // Aksi lanjutan setelah menampilkan swal
       });
     },
   },
   created() {
-    console.log(this.id)
+    const token = localStorage.getItem("token");
+    const expires_in = localStorage.getItem("expires_in");
+    // console.log(new Date());
+    // console.log(new Date(expires_in));
+    if (!token || !expires_in || new Date() > new Date(expires_in)) {
+      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
+      localStorage.removeItem("token");
+      localStorage.removeItem("expires_in");
+      this.$router.push("/");
+      return;
+    }
+    console.log(this.id);
     axios
-      .get(`http://localhost:8080/api/barang/${this.id}`) // Gunakan properti 'id' sebagai bagian dari URL endpoint
+      .get(`http://localhost:8000/api/auth/barang/${this.id}`,{
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        }) // Gunakan properti 'id' sebagai bagian dari URL endpoint
       .then((response) => {
         this.barang = response.data.data;
       })
