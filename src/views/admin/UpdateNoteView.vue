@@ -1,149 +1,184 @@
+<script setup>
+import Sidebar from "../../components/Sidebar.vue";
+import Navbar from "../../components/Navbar.vue";
+import Footer from "../../components/Footer.vue";
+</script>
 <template>
-  <div>
-    <h1 class="text-center mt-3 mb-5">Update Data Note</h1>
-    <form @submit.prevent="updateBarang">
-      <div class="headerNote">
-            <div class="row">
-                <div class="col-sm-6">
+  <div id="wrapper">
+    <Sidebar />
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <Navbar />
+
+        <!-- Begin Page Content -->
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-10">
+            <h1 class="text-center mt-3 mb-5">Update Data Note</h1>
+            <form @submit.prevent="updateBarang">
+              <div class="headerNote">
+                <div class="row">
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="location" class="form-label">Location</label>
-                        <input
+                      <label for="location" class="form-label">Location</label>
+                      <input
                         type="text"
                         class="form-control"
                         id="location"
                         placeholder="input barang"
                         v-model="form.location"
-                        />
+                      />
                     </div>
-                </div>
-                <div class="col-sm-6">
+                  </div>
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="truck" class="form-label">Nomor Truck</label>
-                        <input
+                      <label for="truck" class="form-label">Nomor Truck</label>
+                      <input
                         type="text"
                         class="form-control"
                         id="no_truck"
                         placeholder="input barang"
                         v-model="form.no_truck"
-                        />
+                      />
                     </div>
+                  </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="location" class="form-label">Date</label>
-                        <input
+                      <label for="location" class="form-label">Date</label>
+                      <input
                         type="date"
                         class="form-control"
                         id="date"
                         placeholder="input date"
                         v-model="form.date"
-                        />
+                      />
                     </div>
-                </div>
-                <div class="col-sm-6">
+                  </div>
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="driver" class="form-label">Driver</label>
-                        <input
+                      <label for="driver" class="form-label">Driver</label>
+                      <input
                         type="text"
                         class="form-control"
                         id="driver"
                         placeholder="input driver"
                         v-model="form.driver"
-                        />
+                      />
                     </div>
+                  </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="container" class="form-label">Nomor Container</label>
-                        <input
+                      <label for="container" class="form-label"
+                        >Nomor Container</label
+                      >
+                      <input
                         type="text"
                         class="form-control"
                         id="no_container"
                         placeholder="input nomor container"
                         v-model="form.no_container"
-                        />
+                      />
                     </div>
-                </div>
-                <div class="col-sm-6">
+                  </div>
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="telp" class="form-label">No Telp</label>
-                        <input
+                      <label for="telp" class="form-label">No Telp</label>
+                      <input
                         type="text"
                         class="form-control"
                         id="telp"
                         placeholder="input telp"
                         v-model="form.telp"
-                        />
+                      />
                     </div>
+                  </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="seal" class="form-label">Nomor Seal</label>
-                        <input
+                      <label for="seal" class="form-label">Nomor Seal</label>
+                      <input
                         type="text"
                         class="form-control"
                         id="no_seal"
                         placeholder="input nomor seal"
                         v-model="form.no_seal"
-                        />
+                      />
                     </div>
+                  </div>
+                  <div class="col-sm-6"></div>
                 </div>
-                <div class="col-sm-6"></div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-6">
                     <div class="mb-3">
-                        <label for="destination" class="form-label">Destination</label>
-                        <input
+                      <label for="destination" class="form-label"
+                        >Destination</label
+                      >
+                      <input
                         type="text"
                         class="form-control"
                         id="destination"
                         placeholder="input nomor destination"
                         v-model="form.destination"
-                        />
+                      />
                     </div>
+                  </div>
+                  <div class="col-sm-6"></div>
                 </div>
-                <div class="col-sm-6"></div>
-            </div>
-        </div>
+              </div>
 
-        <div class="row mt-3">
-            <div class="row">
-                <div class="col-sm-6">
-                <router-link to="/admin-note" class="btn btn-outline-danger mb-5"
-                    >Back</router-link
-                >
+              <div class="row mt-3">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <router-link
+                      to="/admin-note"
+                      class="btn btn-danger mb-5"
+                      >Back</router-link
+                    >
+                  </div>
+                  <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary float-end">
+                      Submit
+                    </button>
+                  </div>
                 </div>
-                <div class="col-sm-6">
-                <button type="submit" class="btn btn-outline-primary float-end">
-                    Submit
-                </button>
-                </div>
-            </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-sm-1"></div>
         </div>
-    </form>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <Footer />
+      <!-- End of Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  props: ['id'], // Tambahkan properti 'id' untuk menerima ID dari parameter rute
+  props: ["id"], // Tambahkan properti 'id' untuk menerima ID dari parameter rute
 
   data() {
     return {
-      form:[],
+      form: [],
     };
   },
   methods: {
@@ -157,28 +192,47 @@ export default {
       formData.append("no_truck", this.form.no_truck);
       formData.append("driver", this.form.driver);
       formData.append("telp", this.form.telp);
-      console.log('test',formData)
+      console.log("test", formData);
       axios
-        .post(`http://localhost:8080/api/update-note/${this.id}`, formData) // Gunakan properti 'id' sebagai bagian dari URL endpoint
+        .put(`http://localhost:8000/api/auth/notes/${this.id}`, formData,{
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        }) // Gunakan properti 'id' sebagai bagian dari URL endpoint
         .then((response) => {
           console.log(response.data);
           this.showAlert();
-          this.$router.push('/admin-note');
+          this.$router.push("/admin-note");
         })
         .catch((error) => {
           console.error(error);
         });
     },
     showAlert() {
-      this.$swal('Data berhasil diperbarui!').then(() => {
+      this.$swal("Data berhasil diperbarui!").then(() => {
         // Aksi lanjutan setelah menampilkan swal
       });
     },
   },
   created() {
-    console.log(this.id)
+    const token = localStorage.getItem("token");
+    const expires_in = localStorage.getItem("expires_in");
+    // console.log(new Date());
+    // console.log(new Date(expires_in));
+    if (!token || !expires_in || new Date() > new Date(expires_in)) {
+      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
+      localStorage.removeItem("token");
+      localStorage.removeItem("expires_in");
+      this.$router.push("/");
+      return;
+    }
+    console.log(this.id);
     axios
-      .get(`http://localhost:8080/api/note/${this.id}`) // Gunakan properti 'id' sebagai bagian dari URL endpoint
+      .get(`http://localhost:8000/api/auth/notes/${this.id}`,{
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        }) // Gunakan properti 'id' sebagai bagian dari URL endpoint
       .then((response) => {
         this.form = response.data.data;
       })

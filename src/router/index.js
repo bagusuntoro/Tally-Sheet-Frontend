@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '../views/backup.vue'
+import DashboardView from '../views/admin/DashboardView.vue'
 import UpdateBarangView from '../views/admin/UpdateBarangView.vue'
 
 const router = createRouter({
@@ -8,7 +8,20 @@ const router = createRouter({
     {
       path: '/',
       name: 'login',
-      component: () => import('../views/LoginView.vue')
+      component: () => import('../views/LoginView.vue'),
+      meta: {
+        bodyClass: 'custom-body-style', // Class khusus untuk halaman ini
+      },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue')
+    },
+    {
+      path: '/lupa-password',
+      name: 'lupa-password',
+      component: () => import('../views/LupaPasswordView.vue')
     },
     // admin
     {
@@ -34,7 +47,7 @@ const router = createRouter({
     },
     {
       path: '/admin-note',
-      name: 'admin-note',
+      name: 'adminnote',
       component: () => import('../views/admin/NoteView.vue')
     },
     {
@@ -66,7 +79,18 @@ const router = createRouter({
       component: () => import('../views/admin/DetailNoteView.vue'),
       props: true // Mengaktifkan pengiriman props sebagai parameter
     },
+    {
+      path: '/admin-users', // Menambahkan parameter :id
+      name: 'admin-users',
+      component: () => import('../views/admin/UserView.vue')
+    },
+    {
+      path: '/admin-input-user', // Menambahkan parameter :id
+      name: 'admin-input-user',
+      component: () => import('../views/admin/InputUserView.vue')
+    },
   ]
 })
+
 
 export default router
