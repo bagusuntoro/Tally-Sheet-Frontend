@@ -1,5 +1,5 @@
 <script setup>
-import Sidebar from "../../components/Sidebar.vue";
+import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
 </script>
@@ -221,7 +221,7 @@ export default {
         })
         .then((response) => {
           console.log(response.data);
-          this.$router.push({ name: 'admin-signature', params: { id: this.id } });
+          this.$router.push({ name: 'user-signature', params: { id: this.id } });
         })
         .catch((error) => {
           console.error(error);

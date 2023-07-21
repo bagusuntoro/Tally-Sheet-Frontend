@@ -20,9 +20,9 @@ import Footer from "../../components/Footer.vue";
           <div class="col-sm-10">
             <div class="row mt-5">
               <div class="col-sm-3">
-                <router-link class="btn btn-primary me-2" to="admin-input-note">
+                <!-- <router-link class="btn btn-primary me-2" to="admin-input-note">
                   <i class="bi bi-plus"></i>
-                </router-link>
+                </router-link> -->
               </div>
               <div class="col-sm-9"></div>
             </div>

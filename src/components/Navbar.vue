@@ -1,7 +1,7 @@
 <template>
     <!-- Topbar -->
           <nav
-            class="navbar navbar-expand navbar-light bg-primary topbar mb-4 static-top shadow"
+            class="navbar navbar-expand navbar-light bg-gradient-primary topbar mb-4 static-top shadow"
           >
             <!-- Sidebar Toggle (Topbar) -->
             <form class="form-inline">
@@ -14,7 +14,7 @@
             </form>
 
             <!-- Topbar Search -->
-            <form
+            <!-- <form
               class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
             >
               <div class="input-group">
@@ -31,7 +31,7 @@
                   </button>
                 </div>
               </div>
-            </form>
+            </form> -->
 
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -101,7 +101,7 @@
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                   aria-labelledby="userDropdown"
                 >
-                  <a class="dropdown-item" href="#">
+                  <!-- <a class="dropdown-item" href="#">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
                   </a>
@@ -113,7 +113,7 @@
                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                     Activity Log
                   </a>
-                  <div class="dropdown-divider"></div>
+                  <div class="dropdown-divider"></div> -->
                   <a
                     class="dropdown-item"
                     href="#"

@@ -23,66 +23,22 @@
     <div class="sidebar-heading mt-5 text-primary">Menu</div>
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-      <router-link class="nav-link text-primary" to="/admin-dashboard">
+      <router-link class="nav-link text-primary" to="/user-dashboard">
         <i class="bi bi-speedometer2 text-primary"></i>
         <span>Dashboard</span>
       </router-link>
     </li>
 
-    <!-- Nav Item - Barang -->
-    <li class="nav-item">
-      <router-link class="nav-link text-primary" to="/admin-barang">
-        <i class="bi bi-boxes text-primary"></i>
-        <span>Barang</span>
-      </router-link>
-    </li>
-
     <!-- Nav Item - note -->
     <li class="nav-item">
-      <router-link class="nav-link text-primary" to="/admin-note">
+      <router-link class="nav-link text-primary" to="/user-note">
         <i class="bi bi-journal-text text-primary"></i>
         <span>Note</span>
       </router-link>
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading text-primary">Others</div>
-
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed text-primary"
-        href="#"
-        data-toggle="collapse"
-        data-target="#collapsePages"
-        aria-expanded="true"
-        aria-controls="collapsePages"
-      >
-        <i class="fas fa-fw fa-folder text-primary"></i>
-        <span>Users</span>
-      </a>
-      <div
-        id="collapsePages"
-        class="collapse"
-        aria-labelledby="headingPages"
-        data-parent="#accordionSidebar"
-      >
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Management Users</h6>
-          <router-link class="collapse-item" to="/admin-users">
-            <span>Data User</span>
-          </router-link>
-          <!-- <a class="collapse-item" href="#l">Data User</a> -->
-          <a class="collapse-item" href="#">Data Admin</a>
-        </div>
-      </div>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block" />
+    <!-- <hr class="sidebar-divider d-none d-md-block" /> -->
 
    <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">

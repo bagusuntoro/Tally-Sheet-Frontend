@@ -1,5 +1,5 @@
 <script setup>
-import Sidebar from "../../components/Sidebar.vue";
+import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
 </script>
@@ -14,7 +14,7 @@ import Footer from "../../components/Footer.vue";
         <Navbar />
 
         <!-- Begin Page Content -->
-        <h1 class="text-center customMargin">Input Data Note</h1>
+        <h1 class="text-center customMargin h3">Input Data Note</h1>
         <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
           <div class="headerNote">
             <div class="row">
@@ -135,7 +135,7 @@ import Footer from "../../components/Footer.vue";
                 <div class="row">
                   <div class="col-sm-6">
                     <router-link
-                      to="/admin-note"
+                      to="/user-note"
                       class="btn btn-danger mb-5"
                       >Kembali</router-link
                     >
@@ -200,7 +200,7 @@ export default {
         .then((response) => {
           const id = response.data.data.id;
           console.log(response);
-          this.$router.push({ name: 'admin-InputTumpukan', params: { id: id } });
+          this.$router.push({ name: 'user-input-tumpukan', params: { id: id } });
         })
         .catch((error) => {
           console.error(error);
