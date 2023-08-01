@@ -2,23 +2,32 @@
 import Sidebar from "../../components/Sidebar.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
         <div class="row">
           <div class="col-sm-1"></div>
           <div class="col-sm-10">
             <h1 class="text-center mt-3 mb-5">Update Data Note</h1>
-            <form @submit.prevent="updateBarang">
+            <form @submit.prevent="updateNote">
               <div class="headerNote">
                 <div class="row">
                   <div class="col-sm-6">
@@ -174,31 +183,34 @@ import Footer from "../../components/Footer.vue";
 import axios from "axios";
 
 export default {
-  props: ["id"], // Tambahkan properti 'id' untuk menerima ID dari parameter rute
+  props: ["id"],
 
   data() {
     return {
-      form: [],
+      form: {
+        location: "",
+        date: "",
+        no_container: "",
+        no_seal: "",
+        destination: "",
+        no_truck: "",
+        driver: "",
+        telp: "",
+      },
     };
   },
   methods: {
-    updateBarang() {
-      let formData = new FormData();
-      formData.append("location", this.form.location);
-      formData.append("date", this.form.date);
-      formData.append("no_container", this.form.no_container);
-      formData.append("no_seal", this.form.no_seal);
-      formData.append("destination", this.form.destination);
-      formData.append("no_truck", this.form.no_truck);
-      formData.append("driver", this.form.driver);
-      formData.append("telp", this.form.telp);
-      console.log("test", formData);
+    updateNote() {
       axios
-        .put(`http://localhost:8000/api/auth/notes/${this.id}`, formData,{
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
+        .put(
+          `http://localhost:8000/api/auth/notes/${this.id}`,
+          this.form,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
           }
-        }) // Gunakan properti 'id' sebagai bagian dari URL endpoint
+        )
         .then((response) => {
           console.log(response.data);
           this.showAlert();
@@ -213,21 +225,10 @@ export default {
         // Aksi lanjutan setelah menampilkan swal
       });
     },
-  },
-  created() {
-    const token = localStorage.getItem("token");
-    const expires_in = localStorage.getItem("expires_in");
-    // console.log(new Date());
-    // console.log(new Date(expires_in));
-    if (!token || !expires_in || new Date() > new Date(expires_in)) {
-      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
-      localStorage.removeItem("token");
-      localStorage.removeItem("expires_in");
-      this.$router.push("/");
-      return;
-    }
-    console.log(this.id);
-    axios
+
+    fetchNote()
+    {
+      axios
       .get(`http://localhost:8000/api/auth/notes/${this.id}`,{
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -237,6 +238,37 @@ export default {
         this.form = response.data.data;
       })
       .catch((error) => {
+        console.error(error);
+      });
+    }
+  },
+  created() {
+    axios
+      .get(`http://localhost:8000/api/auth/me/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        const role = response.data.role; // Get the user's role from the response
+        const token = localStorage.getItem("token");
+        const expires_in = localStorage.getItem("expires_in");
+        if (!token || !expires_in || new Date() > new Date(expires_in)) {
+          // If token is missing or expired, redirect to the home page
+          localStorage.removeItem("token");
+          localStorage.removeItem("expires_in");
+          this.$router.push("/");
+        } else if (role !== "admin") {
+          // console.log(response.data);
+          // If the user doesn't have admin privileges, redirect to the unauthorized page
+          this.$router.push("/unauthorized");
+        } else {
+          this.fetchNote();
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        this.$router.push("/");
         console.error(error);
       });
   },

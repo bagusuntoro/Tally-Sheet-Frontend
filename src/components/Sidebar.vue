@@ -1,10 +1,10 @@
 <template>
   <!-- Sidebar -->
-      <ul
-      class="navbar-nav bg-gradient-light sidebar sidebar-dark accordion"
-      id="accordionSidebar"
-      :class="{'toggled': sidebarToggled}"
-    >
+  <ul
+    class="navbar-nav bg-gradient-light sidebar sidebar-dark accordion"
+    id="accordionSidebar"
+    :class="{ toggled: sidebarToggled }"
+  >
     <!-- Sidebar - Brand -->
     <a
       class="sidebar-brand d-flex align-items-center justify-content-center"
@@ -13,7 +13,10 @@
       <div class="sidebar-brand-icon mt-2">
         <img src="/img/logo.png" alt="logo" width="50" />
       </div>
-      <div class="sidebar-brand-text ms-3"><span class="text-primary">Tally</span> <span class="text-warning">Sheet</span></div>
+      <div class="sidebar-brand-text ms-3">
+        <span class="text-primary">Tally</span>
+        <span class="text-warning">Sheet</span>
+      </div>
     </a>
 
     <!-- Divider -->
@@ -46,7 +49,7 @@
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider" />
 
     <!-- Heading -->
     <div class="sidebar-heading text-primary">Others</div>
@@ -83,25 +86,34 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block" />
-
-   <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0 bg-primary" id="sidebarToggle" @click="toggleSidebar"></button>
-      </div>
-    </ul>
-    <!-- End of Sidebar -->
+  </ul>
+  <!-- End of Sidebar -->
 </template>
 <script>
 export default {
   data() {
     return {
-      sidebarToggled: false
+      sidebarToggled: false,
     };
   },
   methods: {
     toggleSidebar() {
       this.sidebarToggled = !this.sidebarToggled;
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style>
+@media (max-width: 576px) {
+  /* Gaya CSS untuk menyembunyikan sidebar saat sidebarToggled bernilai false */
+  .sidebar {
+    display: none;
+  }
+}
+/* Gaya CSS untuk menampilkan sidebar saat sidebarToggled bernilai true */
+.toggle-sidebar {
+  display: block !important;
+  /* Tambahkan gaya CSS lain yang Anda inginkan untuk tampilan sidebar yang ditampilkan */
+}
+</style>

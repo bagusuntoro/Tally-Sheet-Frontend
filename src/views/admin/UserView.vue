@@ -2,17 +2,26 @@
 import Sidebar from "../../components/Sidebar.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <!-- Page Wrapper -->
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
         <h1 class="text-center">User Page</h1>
@@ -31,44 +40,47 @@ import Footer from "../../components/Footer.vue";
               <div class="col-sm-9"></div>
             </div>
 
-            <table class="table table-striped mt-2">
-              <thead>
-                <tr>
-                  <th scope="col">No</th>
-                  <th scope="col">Nama</th>
-                  <th scope="col">NIK</th>
-                  <th scope="col">Telp</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in user" :key="item.id">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.nik }}</td>
-                  <td>{{ item.telp }}</td>
-                  <td>{{ item.email }}</td>
-                  <td>
-                    <!-- <router-link
-                      :to="{
-                        name: 'admin-updateuser',
-                        params: { id: item.id },
-                      }"
-                      class="btn btn-warning me-2"
-                    >
-                      <i class="bi bi-pencil-square"></i>
-                    </router-link> -->
-                    <button
-                      @click="confirmDelete(item.id)"
-                      class="btn btn-danger"
-                    >
-                      <i class="bi bi-trash3"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="table table-striped mt-2">
+                <thead>
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Nama</th>
+                    <th scope="col">NIK</th>
+                    <th scope="col">Telp</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in user" :key="item.id">
+                    <th scope="row">{{ index + 1 }}</th>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.nik }}</td>
+                    <td>{{ item.telp }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>
+                      <!-- <router-link
+                        :to="{
+                          name: 'admin-updateuser',
+                          params: { id: item.id },
+                        }"
+                        class="btn btn-warning me-2"
+                      >
+                        <i class="bi bi-pencil-square"></i>
+                      </router-link> -->
+                      <button
+                        v-if="item.role != 'admin'"
+                        @click="confirmDelete(item.id)"
+                        class="btn btn-danger"
+                      >
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="col-sm-1"></div>
         </div>
@@ -136,18 +148,34 @@ export default {
     },
   },
   created() {
-    const token = localStorage.getItem("token");
-    const expires_in = localStorage.getItem("expires_in");
-    // console.log(new Date());
-    // console.log(new Date(expires_in));
-    if (!token || !expires_in || new Date() > new Date(expires_in)) {
-      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
-      localStorage.removeItem("token");
-      localStorage.removeItem("expires_in");
-      this.$router.push("/");
-      return;
-    }
-    this.fetchData();
+        axios
+      .get(`http://localhost:8000/api/auth/me/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        const role = response.data.role; // Get the user's role from the response
+        const token = localStorage.getItem("token");
+        const expires_in = localStorage.getItem("expires_in");
+        if (!token || !expires_in || new Date() > new Date(expires_in)) {
+          // If token is missing or expired, redirect to the home page
+          localStorage.removeItem("token");
+          localStorage.removeItem("expires_in");
+          this.$router.push("/");
+        } else if (role !== "admin") {
+          // console.log(response.data);
+          // If the user doesn't have admin privileges, redirect to the unauthorized page
+          this.$router.push("/unauthorized");
+        } else {
+          this.fetchData();
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        this.$router.push("/");
+        console.error(error);
+      });
   },
 };
 </script>

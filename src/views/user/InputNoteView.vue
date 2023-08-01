@@ -2,19 +2,28 @@
 import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
-        <h1 class="text-center customMargin h3">Input Data Note</h1>
+        <h1 class="text-center customMargin h3">Halaman Input Note</h1>
         <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
           <div class="headerNote">
             <div class="row">
@@ -133,14 +142,14 @@ import Footer from "../../components/Footer.vue";
                 </div>
 
                 <div class="row">
-                  <div class="col-sm-6">
+                  <div class="col-6">
                     <router-link
                       to="/user-note"
                       class="btn btn-danger mb-5"
                       >Kembali</router-link
                     >
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-6">
                     <button type="submit" class="btn btn-primary" style="float:right;">
                       Selanjutnya
                     </button>
@@ -177,7 +186,9 @@ export default {
         no_truck: "",
         driver: "",
         telp: "",
+        user_id:''
       },
+      role: null
     };
   },
   methods: {
@@ -191,6 +202,7 @@ export default {
       formData.append("no_truck", this.form.no_truck);
       formData.append("driver", this.form.driver);
       formData.append("telp", this.form.telp);
+      formData.append("user_id", this.form.user_id);
 
       axios.post("http://localhost:8000/api/auth/notes/", formData,{
           headers: {
@@ -208,17 +220,35 @@ export default {
     },
   },
   created() {
-    const token = localStorage.getItem("token");
-    const expires_in = localStorage.getItem("expires_in");
-    // console.log(new Date());
-    // console.log(new Date(expires_in));
-    if (!token || !expires_in || new Date() > new Date(expires_in)) {
-      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
-      localStorage.removeItem("token");
-      localStorage.removeItem("expires_in");
-      this.$router.push("/");
-      return;
-    }
+    axios
+      .get(`http://localhost:8000/api/auth/me/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        this.role = response.data.role; // Get the user's role from the response
+        this.form.user_id = response.data.id;
+
+        const token = localStorage.getItem("token");
+        const expires_in = localStorage.getItem("expires_in");
+        if (!token || !expires_in || new Date() > new Date(expires_in)) {
+          // If token is missing or expired, redirect to the home page
+          localStorage.removeItem("token");
+          localStorage.removeItem("expires_in");
+          this.$router.push("/");
+        } else if (this.role !== "user") {
+          // If the user doesn't have admin privileges, redirect to the unauthorized page
+          this.$router.push("/unauthorized");
+          // console.log(response.data.role)
+        } else {
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        this.$router.push("/");
+        console.error(error);
+      });
   },
 };
 </script>

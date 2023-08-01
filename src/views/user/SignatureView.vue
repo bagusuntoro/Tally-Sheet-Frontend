@@ -2,37 +2,102 @@
 import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
         <div id="app">
-          <h1 class="text-center">Signature Page</h1>
-          <div class="row mt-4">
+          <h1 class="text-center" v-if="this.index <= 1 && this.index >= 0">
+            {{ this.index === 0 ? "Tandatangan Petugas" : "Tandatangan Supir" }}
+          </h1>
+          <h1 class="text-center" v-if="this.index > 1">
+            Nama Petugas dan supir
+          </h1>
+          <div class="row mt-4" v-if="this.index <= 1 && this.index >= 0">
             <div class="col-sm-1"></div>
             <div class="col-sm-10">
-              <vueSignature
-                ref="signature"
-                :sigOption="option"
-                :h="'300px'"
-                :disabled="disabled"
-                :defaultUrl="dataUrl"
-              ></vueSignature>
+              <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-5">
+                  <vueSignature
+                    ref="signature"
+                    :sigOption="option"
+                    :h="'200px'"
+                    :w="'300px'"
+                    :disabled="disabled"
+                    :defaultUrl="dataUrl"
+                    class="mt-3 m-auto custom"
+                  ></vueSignature>
+                </div>
+                <div class="col-sm-5">
+                  <!-- save -->
+                  <button
+                    class="btn btn-primary w-100"
+                    type="button"
+                    @click="confirmSave"
+                  >
+                    <i class="bi bi-file-check"> Simpan</i>
+                  </button>
+                  <!-- clear -->
+                  <button
+                    class="btn btn-danger w-100"
+                    type="button"
+                    @click="clear"
+                  >
+                    <i class="bi bi-x"> Bersihkan</i>
+                  </button>
+                  <!-- undo -->
+                  <button
+                    class="btn btn-warning w-100"
+                    type="button"
+                    @click="undo"
+                  >
+                    <i class="bi bi-arrow-counterclockwise"> Kembali</i>
+                  </button>
+                  <!-- watermark -->
+                  <button
+                    class="btn btn-success w-100"
+                    type="button"
+                    @click="addWatermark"
+                  >
+                    <i class="bi bi-droplet-half"> Watermark</i>
+                  </button>
+
+                  <!-- disable -->
+                  <button
+                    class="btn btn-dark w-100"
+                    type="button"
+                    @click="toggleDisabled"
+                  >
+                    <i class="bi bi-journal-x"> Disable</i>
+                  </button>
+                </div>
+                <div class="col-sm-1"></div>
+              </div>
             </div>
             <div class="col-sm-1"></div>
           </div>
-          <div class="row mt-2">
+          <!-- <div class="row mt-2" v-if="this.index <=1 && this.index>=0">
             <div class="col-sm-1"></div>
             <div class="col-sm-2">
-              <button class="btn btn-primary w-100" type="button" @click="save">
+              <button class="btn btn-primary w-100" type="button" @click="confirmSave">
                 <i class="bi bi-file-check"></i>
               </button>
             </div>
@@ -65,10 +130,14 @@ import Footer from "../../components/Footer.vue";
               </button>
             </div>
             <div class="col-sm-1"></div>
-          </div>
+          </div> -->
 
           <!-- name -->
-          <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+          <form
+            @submit.prevent="handleSubmit"
+            enctype="multipart/form-data"
+            v-if="this.index > 1"
+          >
             <div class="row mt-5">
               <div class="col-sm-1"></div>
               <div class="col-sm-10">
@@ -76,10 +145,11 @@ import Footer from "../../components/Footer.vue";
                   <label for="petugas" class="form-label">Petugas</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control disable"
                     id="petugas"
                     placeholder="input petugas"
                     v-model="form.petugas"
+                    :disabled="true"
                   />
                 </div>
                 <div class="mb-3">
@@ -92,7 +162,6 @@ import Footer from "../../components/Footer.vue";
                     v-model="form.supir"
                   />
                 </div>
-                
               </div>
               <div class="col-sm-1"></div>
             </div>
@@ -101,18 +170,13 @@ import Footer from "../../components/Footer.vue";
               <div class="col-sm-1"></div>
               <div class="col-sm-10">
                 <div class="row">
-                  <div class="col-sm-6">
-                    <router-link
-                      to="/admin-note"
-                      class="btn btn-danger mb-5"
+                  <div class="col-6">
+                    <router-link to="/admin-note" class="btn btn-danger"
                       >Back</router-link
                     >
                   </div>
-                  <div class="col-sm-6">
-                    <button
-                      type="submit"
-                      class="btn btn-primary float-end"
-                    >
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-primary float-end">
                       Submit
                     </button>
                   </div>
@@ -138,6 +202,7 @@ import Footer from "../../components/Footer.vue";
 <script>
 import axios from "axios";
 import vueSignature from "vue-signature";
+import Swal from "sweetalert2";
 
 export default {
   props: ["id"],
@@ -153,28 +218,34 @@ export default {
       },
       disabled: false,
       form: {
-        jenis_barang: "",
+        petugas: "",
+        supir: "",
       },
+      signature: [],
+      index: 0,
+      role: null,
     };
   },
   methods: {
     handleSubmit() {
       let formData = new FormData();
-      formData.append("name", this.form.name);
-      formData.append("signature", this.$refs.signature.save("image/svg+xml"));
+      formData.append("petugas", this.form.petugas);
+      formData.append("petugas_signature", this.signature[0]);
+      formData.append("supir", this.form.supir);
+      formData.append("supir_signature", this.signature[1]);
       formData.append("id_note", this.id);
       console.log(formData);
       axios
-        .post("http://localhost:8000/api/auth/signatures/", formData,{
+        .post("http://localhost:8000/api/auth/signatures/", formData, {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          }
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
         })
         .then((response) => {
           console.log(response);
+          this.showAlert();
         });
       this.form.name = "";
-      this.showAlert();
     },
 
     showAlert() {
@@ -184,14 +255,34 @@ export default {
         this.$router.push("/user-note");
       });
     },
-
+    confirmSave() {
+      Swal.fire({
+        title: "Konfirmasi",
+        text: `Apakah Anda yakin ingin menyimpan tandatangan ${
+          this.index === 0 ? "Petugas" : "Supir"
+        } ?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya",
+        cancelButtonText: "Tidak",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.save();
+        }
+      });
+    },
     save() {
-      const png = this.$refs.signature.save();
-      const jpeg = this.$refs.signature.save("image/jpeg");
-      const svg = this.$refs.signature.save("image/svg+xml");
-      console.log(png);
-      console.log(jpeg);
-      console.log(svg);
+      this.signature[this.index]= this.$refs.signature.save("image/svg+xml");
+      // this.signature[this.index] = this.$refs.signature.save();
+      console.log("index awal :", this.index);
+      console.log(
+        "tandatangan :",
+        this.signature[this.index],
+        "index akhir :",
+        this.index
+      );
+        this.index++;
+      this.clear();
     },
     clear() {
       this.$refs.signature.clear();
@@ -207,27 +298,46 @@ export default {
         fillStyle: "red",
         strokeStyle: "blue",
         x: 100,
-        y: 200,
+        y: 100,
         sx: 100,
-        sy: 200,
+        sy: 100,
       });
     },
     toggleDisabled() {
       this.disabled = !this.disabled;
     },
   },
-    created() {
-    const token = localStorage.getItem("token");
-    const expires_in = localStorage.getItem("expires_in");
-    // console.log(new Date());
-    // console.log(new Date(expires_in));
-    if (!token || !expires_in || new Date() > new Date(expires_in)) {
-      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
-      localStorage.removeItem("token");
-      localStorage.removeItem("expires_in");
-      this.$router.push("/");
-      return;
-    }
+  created() {
+    axios
+      .get(`http://localhost:8000/api/auth/me/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        this.role = response.data.role; // Get the user's role from the response
+        this.form.petugas = response.data.name;
+
+        const token = localStorage.getItem("token");
+        const expires_in = localStorage.getItem("expires_in");
+        if (!token || !expires_in || new Date() > new Date(expires_in)) {
+          // If token is missing or expired, redirect to the home page
+          localStorage.removeItem("token");
+          localStorage.removeItem("expires_in");
+          this.$router.push("/");
+        } else if (this.role !== "user") {
+          // If the user doesn't have admin privileges, redirect to the unauthorized page
+          this.$router.push("/unauthorized");
+          // console.log(response.data.role)
+        } else {
+          console.log("success");
+          
+        }
+      })
+      .catch((error) => {
+        this.$router.push("/");
+        console.error(error);
+      });
   },
 };
 </script>
