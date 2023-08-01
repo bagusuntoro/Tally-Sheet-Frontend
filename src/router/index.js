@@ -72,6 +72,12 @@ const router = createRouter({
       name: 'admin-input-user',
       component: () => import('../views/admin/InputUserView.vue')
     },
+    {
+      path: '/admin-laporan/:id', // Menambahkan parameter :id
+      name: 'admin-laporan',
+      component: () => import('../views/admin/Laporan.vue'),
+      props: true
+    },
     
 
     

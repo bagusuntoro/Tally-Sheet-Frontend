@@ -2,16 +2,25 @@
 import Sidebar from "../../components/Sidebar.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
-    <div id="wrapper">
-    <Sidebar />
+  <div id="wrapper">
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -110,7 +119,9 @@ import Footer from "../../components/Footer.vue";
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-solid fa-check-double fa-2x text-gray-300"></i>
+                      <i
+                        class="fas fa-solid fa-check-double fa-2x text-gray-300"
+                      ></i>
                     </div>
                   </div>
                 </div>
@@ -161,39 +172,40 @@ export default {
     return {
     };
   },
-  methods: {
-  },
+  methods: {},
   created() {
-  axios
-    .get(`http://localhost:8000/api/auth/me/`, {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-      }
-    })
-    .then((response) => {
-      const role = response.data.role; // Get the user's role from the response
-      const token = localStorage.getItem('token');
-      const expires_in = localStorage.getItem('expires_in');
-      if (!token || !expires_in || new Date() > new Date(expires_in)) {
-        // If token is missing or expired, redirect to the home page
-        localStorage.removeItem('token');
-        localStorage.removeItem('expires_in');
-        this.$router.push('/');
-      } else if (role !== 'admin') {
-        // console.log(response.data);
-        // If the user doesn't have admin privileges, redirect to the unauthorized page
-        this.$router.push('/unauthorized');
-      } else {
-                console.log('role :',role)
-        console.log('success')
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
+    axios
+      .get(`http://localhost:8000/api/auth/me/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        const role = response.data.role; // Get the user's role from the response
+        const token = localStorage.getItem("token");
+        const expires_in = localStorage.getItem("expires_in");
+        if (!token || !expires_in || new Date() > new Date(expires_in)) {
+          // If token is missing or expired, redirect to the home page
+          localStorage.removeItem("token");
+          localStorage.removeItem("expires_in");
+          this.$router.push("/");
+        } else if (role != "admin") {
+          // console.log(response.data);
+          // If the user doesn't have admin privileges, redirect to the unauthorized page
+          this.$router.push("/unauthorized");
+        } else {
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        this.$router.push("/");
+        console.error(error);
+      });
+  },
 };
 </script>
-<style scoped>
+<style>
+#content-wrapper{
+  min-height: 780px !important;
+}
 </style>

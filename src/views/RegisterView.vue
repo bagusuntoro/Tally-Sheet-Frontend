@@ -16,23 +16,23 @@
                     <input type="text" class="form-control form-control-user" v-model="name" placeholder="Nama">
                   </div>
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="number" class="form-control form-control-user" v-model="nik" placeholder="NIK">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-6">
-                    <input type="number" class="form-control form-control-user" v-model="phone" placeholder="No Telepon">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="email" class="form-control form-control-user" v-model="email" placeholder="Email">
+                    <input type="text" class="form-control form-control-user" v-model="alamat" placeholder="Alamat">
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" v-model="password" placeholder="Password">
+                    <input type="number" class="form-control form-control-user" v-model="nik" placeholder="NIK">
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" v-model="repeatPassword" placeholder="Ulangi Password">
+                    <input type="number" class="form-control form-control-user" v-model="phone" placeholder="No Telepon">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="email" class="form-control form-control-user" v-model="email" placeholder="Email">
+                  </div>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="password" class="form-control form-control-user" v-model="password" placeholder="Password">
                   </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">Daftar</button>
@@ -69,6 +69,7 @@ export default {
       nik: '',
       phone: '',
       email: '',
+      alamat:'',
       password: '',
       repeatPassword: ''
     };
@@ -80,9 +81,8 @@ export default {
       formData.append('nik', this.nik);
       formData.append('telp', this.phone);
       formData.append('email', this.email);
+      formData.append('alamat', this.alamat);
       formData.append('password', this.password);
-      formData.append('password', this.password);
-      formData.append('confirm_password', this.repeatPassword);
 
       // Kirim permintaan POST menggunakan Axios
       axios.post('http://localhost:8000/api/auth/register', formData)

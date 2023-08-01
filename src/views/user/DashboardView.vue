@@ -2,16 +2,25 @@
 import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -39,10 +48,10 @@ import Footer from "../../components/Footer.vue";
                       <div
                         class="text-xs font-weight-bold text-primary text-uppercase mb-1"
                       >
-                        Barang (Bulan ini)
+                        Jumlah Barang
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        40,000
+                        40
                       </div>
                     </div>
                     <div class="col-auto">
@@ -62,7 +71,7 @@ import Footer from "../../components/Footer.vue";
                       <div
                         class="text-xs font-weight-bold text-success text-uppercase mb-1"
                       >
-                        Note (Bulan ini)
+                        Jumlah Note
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
                         215,000
@@ -157,7 +166,9 @@ import axios from "axios";
 
 export default {
   data() {
-    return {};
+    return {
+      role: null
+    };
   },
   methods: {},
   created() {
@@ -168,7 +179,7 @@ export default {
         },
       })
       .then((response) => {
-        const role = response.data.role; // Get the user's role from the response
+        this.role = response.data.role; // Get the user's role from the response
 
         const token = localStorage.getItem("token");
         const expires_in = localStorage.getItem("expires_in");
@@ -177,7 +188,7 @@ export default {
           localStorage.removeItem("token");
           localStorage.removeItem("expires_in");
           this.$router.push("/");
-        } else if (role !== "user") {
+        } else if (this.role !== "user") {
           // If the user doesn't have admin privileges, redirect to the unauthorized page
           this.$router.push("/unauthorized");
           // console.log(response.data.role)
@@ -186,10 +197,14 @@ export default {
         }
       })
       .catch((error) => {
+        this.$router.push("/");
         console.error(error);
       });
   },
 };
 </script>
-<style scoped>
+<style>
+#content-wrapper{
+  min-height: 780px !important;
+}
 </style>

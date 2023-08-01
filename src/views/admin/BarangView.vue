@@ -2,17 +2,26 @@
 import Sidebar from "../../components/Sidebar.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <!-- Page Wrapper -->
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
         <h1 class="text-center">Barang Page</h1>
@@ -53,12 +62,12 @@ import Footer from "../../components/Footer.vue";
                     >
                       <i class="bi bi-pencil-square"></i>
                     </router-link>
-                    <button
+                    <!-- <button
                       @click="confirmDelete(item.id)"
                       class="btn btn-danger"
                     >
                       <i class="bi bi-trash3"></i>
-                    </button>
+                    </button> -->
                   </td>
                 </tr>
               </tbody>
@@ -86,7 +95,7 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      barang: [],
+      barang: []
     };
   },
   methods: {
@@ -154,6 +163,7 @@ export default {
       }
     })
     .catch((error) => {
+      this.$router.push('/');
       console.error(error);
     });
   },

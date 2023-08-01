@@ -2,19 +2,28 @@
 import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import { ref } from 'vue';
+
+const sidebarToggled = ref(false);
+const sidebarClass = ref('');
+
+const toggleSidebar = () => {
+  sidebarToggled.value = !sidebarToggled.value;
+  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+};
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar :class="sidebarClass"/>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar"/>
 
         <!-- Begin Page Content -->
-        <h1 class="text-center customMargin h3">Input Data Note</h1>
+        <h1 class="text-center customMargin h3">Halaman Input Note</h1>
         <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
           <div class="headerNote">
             <div class="row">
@@ -23,7 +32,7 @@ import Footer from "../../components/Footer.vue";
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="location" class="form-label">Location</label>
+                      <label for="location" class="form-label">Lokasi</label>
                       <input
                         type="text"
                         class="form-control"
@@ -35,7 +44,7 @@ import Footer from "../../components/Footer.vue";
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="truck" class="form-label">Nomor Truck</label>
+                      <label for="truck" class="form-label">Nomor Truk</label>
                       <input
                         type="text"
                         class="form-control"
@@ -50,19 +59,21 @@ import Footer from "../../components/Footer.vue";
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="location" class="form-label">Date</label>
+                      <label for="location" class="form-label">Tanggal</label>
                       <input
                         type="date"
                         class="form-control"
                         id="date"
                         placeholder="input date"
-                        v-model="form.date"
+                        v-model="now.date"
+                        :max="now.date"
+                        :min="now.date"
                       />
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="driver" class="form-label">Driver</label>
+                      <label for="driver" class="form-label">Supir</label>
                       <input
                         type="text"
                         class="form-control"
@@ -78,7 +89,7 @@ import Footer from "../../components/Footer.vue";
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label for="container" class="form-label"
-                        >Nomor Container</label
+                        >Nomor Kontainer</label
                       >
                       <input
                         type="text"
@@ -119,7 +130,7 @@ import Footer from "../../components/Footer.vue";
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label for="destination" class="form-label"
-                        >Destination</label
+                        >Tujuan</label
                       >
                       <input
                         type="text"
@@ -133,14 +144,14 @@ import Footer from "../../components/Footer.vue";
                 </div>
 
                 <div class="row">
-                  <div class="col-sm-6">
+                  <div class="col-6">
                     <router-link
                       to="/user-note"
                       class="btn btn-danger mb-5"
                       >Kembali</router-link
                     >
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-6">
                     <button type="submit" class="btn btn-primary" style="float:right;">
                       Selanjutnya
                     </button>
@@ -177,20 +188,41 @@ export default {
         no_truck: "",
         driver: "",
         telp: "",
+        user_id:''
       },
+      now: {},
+      role: null
     };
   },
+  mounted() {
+    this.getCurrentDateTime();
+  },
   methods: {
+    getCurrentDateTime() {
+      const date = new Date();
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+
+      this.now = {
+        date: `${year}-${month}-${day}`,
+        time: `${hours}:${minutes}:${seconds}`,
+      };
+    },
     handleSubmit() {
       let formData = new FormData();
       formData.append("location", this.form.location);
-      formData.append("date", this.form.date);
+      formData.append("date", this.now.date);
       formData.append("no_container", this.form.no_container);
       formData.append("no_seal", this.form.no_seal);
       formData.append("destination", this.form.destination);
       formData.append("no_truck", this.form.no_truck);
       formData.append("driver", this.form.driver);
       formData.append("telp", this.form.telp);
+      formData.append("user_id", this.form.user_id);
 
       axios.post("http://localhost:8000/api/auth/notes/", formData,{
           headers: {
@@ -208,17 +240,35 @@ export default {
     },
   },
   created() {
-    const token = localStorage.getItem("token");
-    const expires_in = localStorage.getItem("expires_in");
-    // console.log(new Date());
-    // console.log(new Date(expires_in));
-    if (!token || !expires_in || new Date() > new Date(expires_in)) {
-      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
-      localStorage.removeItem("token");
-      localStorage.removeItem("expires_in");
-      this.$router.push("/");
-      return;
-    }
+    axios
+      .get(`http://localhost:8000/api/auth/me/`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        this.role = response.data.role; // Get the user's role from the response
+        this.form.user_id = response.data.id;
+
+        const token = localStorage.getItem("token");
+        const expires_in = localStorage.getItem("expires_in");
+        if (!token || !expires_in || new Date() > new Date(expires_in)) {
+          // If token is missing or expired, redirect to the home page
+          localStorage.removeItem("token");
+          localStorage.removeItem("expires_in");
+          this.$router.push("/");
+        } else if (this.role !== "user") {
+          // If the user doesn't have admin privileges, redirect to the unauthorized page
+          this.$router.push("/unauthorized");
+          // console.log(response.data.role)
+        } else {
+          console.log("success");
+        }
+      })
+      .catch((error) => {
+        this.$router.push("/");
+        console.error(error);
+      });
   },
 };
 </script>

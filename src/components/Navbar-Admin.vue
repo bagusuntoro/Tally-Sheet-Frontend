@@ -8,7 +8,7 @@
       <button
         id="sidebarToggleTop"
         class="btn btn-link d-md-none rounded-circle mr-3 text-light"
-        @click="sidebarToggled"
+        @click="sidebarToggledAdmin"
       >
         <i class="fa fa-bars"></i>
       </button>
@@ -61,7 +61,7 @@ import Swal from "sweetalert2";
 export default {
   // props: ["id"],
   props: {
-    sidebarToggled: Boolean // Terima properti sidebarToggled dari komponen induk (App.vue)
+    sidebarToggledAdmin: Boolean // Terima properti sidebarToggledAdmin dari komponen induk (App.vue)
   },
   
   data() {
@@ -70,8 +70,8 @@ export default {
     };
   },
   methods: {
-    sidebarToggled() {
-      this.$emit("toggle-sidebar", !this.sidebarToggled);
+    sidebarToggledAdmin() {
+      this.$emit("toggle-sidebar", !this.sidebarToggledAdmin);
     },
     konfirmasi() {
       Swal.fire({
