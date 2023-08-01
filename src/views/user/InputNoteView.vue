@@ -208,35 +208,29 @@ export default {
       const seconds = String(date.getSeconds()).padStart(2, "0");
 
       this.now = {
-        date: `${year}-${month}-${day}`,
+        date: `${day}-${month}-${year}`,
         time: `${hours}:${minutes}:${seconds}`,
       };
+      this.form.date = this.now.date
     },
     handleSubmit() {
-      let formData = new FormData();
-      formData.append("location", this.form.location);
-      formData.append("date", this.now.date);
-      formData.append("no_container", this.form.no_container);
-      formData.append("no_seal", this.form.no_seal);
-      formData.append("destination", this.form.destination);
-      formData.append("no_truck", this.form.no_truck);
-      formData.append("driver", this.form.driver);
-      formData.append("telp", this.form.telp);
-      formData.append("user_id", this.form.user_id);
+      const data = JSON.stringify(this.form)
+      localStorage.setItem('note', data);
+      this.$router.push({ name: 'user-input-tumpukan'});
 
-      axios.post("http://localhost:8000/api/auth/notes/", formData,{
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          }
-        })
-        .then((response) => {
-          const id = response.data.data.id;
-          console.log(response);
-          this.$router.push({ name: 'user-input-tumpukan', params: { id: id } });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      // axios.post("http://localhost:8000/api/auth/notes/", formData,{
+      //     headers: {
+      //       Authorization: 'Bearer ' + localStorage.getItem('token')
+      //     }
+      //   })
+      //   .then((response) => {
+      //     const id = response.data.data.id;
+      //     console.log(response);
+      //     this.$router.push({ name: 'user-input-tumpukan', params: { id: id } });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
     },
   },
   created() {

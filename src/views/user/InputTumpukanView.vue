@@ -215,7 +215,6 @@ const toggleSidebar = () => {
 import axios from "axios";
 
 export default {
-  props: ["id"],
   data() {
     return {
       tumpukan: 0,
@@ -225,52 +224,38 @@ export default {
       headers: [], // Menyimpan nama header
       detailNote: [],
       role: null,
+      id_note:null
     };
   },
 
   methods: {
     submitData() {
-      console.log(this.dataBarang);
+    console.log(this.dataBarang);
 
-      const requestData = [];
+    const requestData = [];
 
-      this.dataBarang.forEach((item) => {
-        const tumpukanFields = {};
-        for (const header in item.tumpukan) {
-          tumpukanFields[`tumpukan_${header}`] =
-            item.tumpukan[header].join(",");
-        }
+    this.dataBarang.forEach((item) => {
+      const tumpukanFields = {};
+      for (const header in item.tumpukan) {
+        tumpukanFields[`tumpukan_${header}`] = item.tumpukan[header].join(",");
+      }
 
-        const total = this.getTotalTumpukan(item);
+      const total = this.getTotalTumpukan(item);
 
-        const newData = {
-          ...tumpukanFields,
-          id_barang: item.id,
-          id_note: this.id,
-          total: total,
-        };
+      const newData = {
+        ...tumpukanFields,
+        id_barang: item.id,
+        // id_note: this.id_note,
+        total: total,
+      };
 
-        requestData.push(newData);
-      });
+      requestData.push(newData);
+    });
 
-      axios
-        .post("http://localhost:8000/api/auth/tumpukan", requestData, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.$router.push({
-            name: "user-signature",
-            params: { id: this.id },
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
+    const data = JSON.stringify(requestData);
+    localStorage.setItem("tumpukans", data);
+    this.$router.push({ name: 'user-signature'});
+  },
 
     fetchBarang() {
       console.log("tesss id :", this.id);
@@ -286,19 +271,19 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-      axios
-        .get(`http://localhost:8000/api/auth/notes/${this.id}`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((response) => {
-          this.detailNote = response.data.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      console.log(this.detailNote);
+      // axios
+      //   .get(`http://localhost:8000/api/auth/notes/${this.id}`, {
+      //     headers: {
+      //       Authorization: "Bearer " + localStorage.getItem("token"),
+      //     },
+      //   })
+      //   .then((response) => {
+      //     this.detailNote = response.data.data;
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
+      // console.log(this.detailNote);
     },
     submitBarang() {
       if (this.selectedBarang) {
@@ -350,6 +335,7 @@ export default {
         this.role = response.data.role; // Get the user's role from the response
 
         const token = localStorage.getItem("token");
+        this.detailNote = localStorage.getItem("note");
         const expires_in = localStorage.getItem("expires_in");
         if (!token || !expires_in || new Date() > new Date(expires_in)) {
           // If token is missing or expired, redirect to the home page
@@ -363,6 +349,8 @@ export default {
         } else {
           console.log("success");
           this.fetchBarang();
+          const data= localStorage.getItem("note")
+          this.detailNote = JSON.parse(data);
         }
       })
       .catch((error) => {

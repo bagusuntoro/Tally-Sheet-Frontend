@@ -104,16 +104,16 @@ const router = createRouter({
       component: () => import('../views/user/InputNoteView.vue')
     },
     {
-      path: '/user-input-tumpukan/:id', // Menambahkan parameter :id
+      path: '/user-input-tumpukan/', // Menambahkan parameter :id
       name: 'user-input-tumpukan',
       component: () => import('../views/user/InputTumpukanView.vue'),
-      props: true
+      // props: true
     },
     {
-      path: '/user-signature/:id', // Menambahkan parameter :id
+      path: '/user-signature/', // Menambahkan parameter :id
       name: 'user-signature',
       component: () => import('../views/user/SignatureView.vue'),
-      props: true
+      // props: true
     },
 
     {

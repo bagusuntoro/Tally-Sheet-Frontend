@@ -224,9 +224,27 @@ export default {
       signature: [],
       index: 0,
       role: null,
+      note: [],
+      tumpukans:[],
     };
   },
   methods: {
+    submitNote(){
+      axios.post("http://localhost:8000/api/auth/notes/", this.note,{
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        })
+        .then((response) => {
+          this.submitTumpukans(response.data.data.id)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    submitTumpukans(id){
+
+    },
     handleSubmit() {
       let formData = new FormData();
       formData.append("petugas", this.form.petugas);
@@ -331,6 +349,13 @@ export default {
           // console.log(response.data.role)
         } else {
           console.log("success");
+          const note= localStorage.getItem("note")
+          this.note = JSON.parse(note);
+          const tumpukans= localStorage.getItem("tumpukans")
+          this.tumpukans = JSON.parse(tumpukans);
+
+          console.log('note: ', this.note)
+          console.log('tumpukans: ', this.tumpukans)
           
         }
       })
