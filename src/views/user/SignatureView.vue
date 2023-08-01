@@ -1,5 +1,5 @@
 <script setup>
-import Sidebar from "../../components/Sidebar.vue";
+import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
 </script>
@@ -73,15 +73,26 @@ import Footer from "../../components/Footer.vue";
               <div class="col-sm-1"></div>
               <div class="col-sm-10">
                 <div class="mb-3">
-                  <label for="name" class="form-label">Name</label>
+                  <label for="petugas" class="form-label">Petugas</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="name"
-                    placeholder="input name"
-                    v-model="form.name"
+                    id="petugas"
+                    placeholder="input petugas"
+                    v-model="form.petugas"
                   />
                 </div>
+                <div class="mb-3">
+                  <label for="supir" class="form-label">Supir</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="supir"
+                    placeholder="input supir"
+                    v-model="form.supir"
+                  />
+                </div>
+                
               </div>
               <div class="col-sm-1"></div>
             </div>
@@ -170,7 +181,7 @@ export default {
       // Use sweetalert2
       this.$swal("Data Berhasil di inputkan!!").then(() => {
         // Redirect to a specific page
-        this.$router.push("/admin-note");
+        this.$router.push("/user-note");
       });
     },
 

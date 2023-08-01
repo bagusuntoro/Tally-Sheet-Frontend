@@ -73,7 +73,13 @@ export default {
                     const expires = response.data.expires_in;
                     localStorage.setItem('token', token);
                     localStorage.setItem('expires_in', expires);
-                    this.$router.push('/admin-dashboard');
+                    if (response.data.role==='admin') {
+                        this.$router.push('/admin-dashboard');
+                    }else if (response.data.role === 'user'){
+                        this.$router.push('/user-dashboard');
+                    }else{
+                        this.$router.push('/unauthorized');
+                    }
                 })
                 .catch(error => {
                     console.error(error);

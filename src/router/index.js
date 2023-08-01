@@ -51,26 +51,9 @@ const router = createRouter({
       component: () => import('../views/admin/NoteView.vue')
     },
     {
-      path: '/admin-input-note',
-      name: 'admin-input-note',
-      component: () => import('../views/admin/InputNoteView.vue')
-    },
-    {
       path: '/admin-update-note/:id', // Menambahkan parameter :id
       name: 'admin-updateNote',
       component: () => import('../views/admin/UpdateNoteView.vue'),
-      props: true // Mengaktifkan pengiriman props sebagai parameter
-    },
-    {
-      path: '/admin-input-tumpukan/:id', // Menambahkan parameter :id
-      name: 'admin-InputTumpukan',
-      component: () => import('../views/admin/InputTumpukanView.vue'),
-      props: true // Mengaktifkan pengiriman props sebagai parameter
-    },
-    {
-      path: '/admin-signature/:id', // Menambahkan parameter :id
-      name: 'admin-signature',
-      component: () => import('../views/admin/signatureView.vue'),
       props: true // Mengaktifkan pengiriman props sebagai parameter
     },
     {
@@ -89,6 +72,50 @@ const router = createRouter({
       name: 'admin-input-user',
       component: () => import('../views/admin/InputUserView.vue')
     },
+    
+
+    
+    // users
+    {
+      path: '/user-dashboard', // Menambahkan parameter :id
+      name: 'user-dashboard',
+      component: () => import('../views/user/DashboardView.vue')
+    },
+    {
+      path: '/user-note', // Menambahkan parameter :id
+      name: 'user-note',
+      component: () => import('../views/user/NoteView.vue')
+    },
+    {
+      path: '/user-detail-note/:id', // Menambahkan parameter :id
+      name: 'user-detail-note',
+      component: () => import('../views/user/DetailNoteView.vue'),
+      props: true
+    },
+    {
+      path: '/user-input-note', // Menambahkan parameter :id
+      name: 'user-input-note',
+      component: () => import('../views/user/InputNoteView.vue')
+    },
+    {
+      path: '/user-input-tumpukan/:id', // Menambahkan parameter :id
+      name: 'user-input-tumpukan',
+      component: () => import('../views/user/InputTumpukanView.vue'),
+      props: true
+    },
+    {
+      path: '/user-signature/:id', // Menambahkan parameter :id
+      name: 'user-signature',
+      component: () => import('../views/user/SignatureView.vue'),
+      props: true
+    },
+
+    {
+      path: '/unauthorized', // Menambahkan parameter :id
+      name: 'unauthorized',
+      component: () => import('../views/Unauthorized.vue')
+    },
+    
   ]
 })
 

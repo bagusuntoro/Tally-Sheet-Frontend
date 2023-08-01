@@ -129,18 +129,33 @@ export default {
     },
   },
   created() {
-    const token = localStorage.getItem("token");
-    const expires_in = localStorage.getItem("expires_in");
-    // console.log(new Date());
-    // console.log(new Date(expires_in));
-    if (!token || !expires_in || new Date() > new Date(expires_in)) {
-      // Jika token tidak ada atau kadaluarsa, redirect ke halaman utama
-      localStorage.removeItem("token");
-      localStorage.removeItem("expires_in");
-      this.$router.push("/");
-      return;
-    }
-    this.fetchData();
+    axios
+    .get(`http://localhost:8000/api/auth/me/`, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+    .then((response) => {
+      const role = response.data.role; // Get the user's role from the response
+
+      const token = localStorage.getItem('token');
+      const expires_in = localStorage.getItem('expires_in');
+      if (!token || !expires_in || new Date() > new Date(expires_in)) {
+        // If token is missing or expired, redirect to the home page
+        localStorage.removeItem('token');
+        localStorage.removeItem('expires_in');
+        this.$router.push('/');
+      } else if (role !== 'admin') {
+        // If the user doesn't have admin privileges, redirect to the unauthorized page
+        this.$router.push('/unauthorized');
+      } else {
+        console.log('success')
+        this.fetchData();
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   },
 };
 </script>
