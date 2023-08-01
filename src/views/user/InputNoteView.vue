@@ -32,7 +32,7 @@ const toggleSidebar = () => {
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="location" class="form-label">Location</label>
+                      <label for="location" class="form-label">Lokasi</label>
                       <input
                         type="text"
                         class="form-control"
@@ -44,7 +44,7 @@ const toggleSidebar = () => {
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="truck" class="form-label">Nomor Truck</label>
+                      <label for="truck" class="form-label">Nomor Truk</label>
                       <input
                         type="text"
                         class="form-control"
@@ -59,19 +59,21 @@ const toggleSidebar = () => {
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="location" class="form-label">Date</label>
+                      <label for="location" class="form-label">Tanggal</label>
                       <input
                         type="date"
                         class="form-control"
                         id="date"
                         placeholder="input date"
-                        v-model="form.date"
+                        v-model="now.date"
+                        :max="now.date"
+                        :min="now.date"
                       />
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="driver" class="form-label">Driver</label>
+                      <label for="driver" class="form-label">Supir</label>
                       <input
                         type="text"
                         class="form-control"
@@ -87,7 +89,7 @@ const toggleSidebar = () => {
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label for="container" class="form-label"
-                        >Nomor Container</label
+                        >Nomor Kontainer</label
                       >
                       <input
                         type="text"
@@ -128,7 +130,7 @@ const toggleSidebar = () => {
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label for="destination" class="form-label"
-                        >Destination</label
+                        >Tujuan</label
                       >
                       <input
                         type="text"
@@ -188,14 +190,32 @@ export default {
         telp: "",
         user_id:''
       },
+      now: {},
       role: null
     };
   },
+  mounted() {
+    this.getCurrentDateTime();
+  },
   methods: {
+    getCurrentDateTime() {
+      const date = new Date();
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+
+      this.now = {
+        date: `${year}-${month}-${day}`,
+        time: `${hours}:${minutes}:${seconds}`,
+      };
+    },
     handleSubmit() {
       let formData = new FormData();
       formData.append("location", this.form.location);
-      formData.append("date", this.form.date);
+      formData.append("date", this.now.date);
       formData.append("no_container", this.form.no_container);
       formData.append("no_seal", this.form.no_seal);
       formData.append("destination", this.form.destination);

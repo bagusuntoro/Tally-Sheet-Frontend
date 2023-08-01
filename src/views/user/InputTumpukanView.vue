@@ -25,63 +25,63 @@ const toggleSidebar = () => {
         <!-- Begin Page Content -->
         <h1 class="text-center customMargin h3">Halaman Input Tumpukan</h1>
         <!-- detail -->
-        <div class="row ms-1">
+        <div class="row ms-1 mt-5">
           <div class="col-sm-1"></div>
           <div class="col-sm-10">
             <div class="row">
-              <div class="col-6">
-                <h5>Lokasi</h5>
+              <div class="col-4">
+                <h6>Lokasi</h6>
               </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.location }}</h5>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <h5>Tanggal</h5>
-              </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.date }}</h5>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.location }}</h6>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
-                <h5>Supir</h5>
+              <div class="col-4">
+                <h6>Tanggal</h6>
               </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.driver }}</h5>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <h5>No. Container</h5>
-              </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.no_container }}</h5>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.date }}</h6>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
-                <h5>No Telp</h5>
+              <div class="col-4">
+                <h6>Supir</h6>
               </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.telp }}</h5>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <h5>No Seal</h5>
-              </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.no_seal }}</h5>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.driver }}</h6>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
-                <h5>Tujuan</h5>
+              <div class="col-4">
+                <h6>No. Container</h6>
               </div>
-              <div class="col-6">
-                <h5>: {{ this.detailNote.destination }}</h5>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.no_container }}</h6>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <h6>No Telp</h6>
+              </div>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.telp }}</h6>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <h6>No Seal</h6>
+              </div>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.no_seal }}</h6>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <h6>Tujuan</h6>
+              </div>
+              <div class="col-8">
+                <h6>: {{ this.detailNote.destination }}</h6>
               </div>
             </div>
           </div>
