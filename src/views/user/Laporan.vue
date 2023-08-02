@@ -1,5 +1,5 @@
 <script setup>
-import Sidebar from "../../components/Sidebar.vue";
+import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
 import { ref } from "vue";
@@ -29,7 +29,7 @@ const toggleSidebar = () => {
             <div class="col-sm-10">
               <div class="row">
                 <div class="col-6">
-                  <router-link to="/admin-note" class="btn btn-danger mb-5"
+                  <router-link to="/user-note" class="btn btn-danger mb-5"
                     >Kembali</router-link
                   >
                 </div>
@@ -356,7 +356,7 @@ export default {
           localStorage.removeItem("token");
           localStorage.removeItem("expires_in");
           this.$router.push("/");
-        } else if (role !== "admin") {
+        } else if (role !== "user") {
           // If the user doesn't have admin privileges, redirect to the unauthorized page
           this.$router.push("/unauthorized");
           // console.log(response.data.role)

@@ -208,7 +208,7 @@ export default {
       const seconds = String(date.getSeconds()).padStart(2, "0");
 
       this.now = {
-        date: `${day}-${month}-${year}`,
+        date: `${year}-${month}-${day}`,
         time: `${hours}:${minutes}:${seconds}`,
       };
       this.form.date = this.now.date
@@ -217,20 +217,6 @@ export default {
       const data = JSON.stringify(this.form)
       localStorage.setItem('note', data);
       this.$router.push({ name: 'user-input-tumpukan'});
-
-      // axios.post("http://localhost:8000/api/auth/notes/", formData,{
-      //     headers: {
-      //       Authorization: 'Bearer ' + localStorage.getItem('token')
-      //     }
-      //   })
-      //   .then((response) => {
-      //     const id = response.data.data.id;
-      //     console.log(response);
-      //     this.$router.push({ name: 'user-input-tumpukan', params: { id: id } });
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
     },
   },
   created() {
@@ -257,6 +243,8 @@ export default {
           // console.log(response.data.role)
         } else {
           console.log("success");
+          const data= localStorage.getItem("note")
+          this.form = JSON.parse(data);
         }
       })
       .catch((error) => {

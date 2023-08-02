@@ -56,14 +56,16 @@ const toggleSidebar = () => {
                       <button type="button" @click="detail(item.id)" class="btn btn-warning" style="float:right;">
                         <i class="bi bi-ticket-detailed"></i>
                       </button>
-                      <!-- <router-link
+                       <router-link
                         :to="{
-                          name: 'user-detail-note',
+                          name: 'user-laporan',
                           params: { id: item.id },
                         }"
-                        class="btn btn-warning me-2"
+                        class="btn btn-success me-2"
                       >
-                      </router-link> -->
+                        <i class="bi bi-download"></i>
+                      </router-link>
+                      <!-- <router-link to="/laporan" class="btn btn-success me-2">Laporan Alternatif</router-link> -->
                     </td>
                   </tr>
                 </tbody>

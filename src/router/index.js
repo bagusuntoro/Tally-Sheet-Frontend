@@ -79,7 +79,7 @@ const router = createRouter({
       props: true
     },
     
-
+    
     
     // users
     {
@@ -121,6 +121,14 @@ const router = createRouter({
       name: 'unauthorized',
       component: () => import('../views/Unauthorized.vue')
     },
+    {
+      path: '/user-laporan/:id',
+      name: 'user-laporan',
+      component: () => import('../views/user/Laporan.vue'),
+      props: true,
+      // alias: '/laporan' , // Path alternatif yang akan ditampilkan di browser
+    }
+    
     
   ]
 })

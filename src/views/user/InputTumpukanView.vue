@@ -190,12 +190,21 @@ const toggleSidebar = () => {
         <div class="row">
           <div class="col-sm-1"></div>
           <div class="col-sm-10">
-            <button
-              class="btn btn-primary mb-5 mt-5 float-end"
-              @click="submitData"
-            >
-              Selanjutnya
-            </button>
+            <div class="row mb-5 mt-5">
+              <div class="col-6">
+                <router-link to="/user-input-note" class="btn btn-danger">
+                  Kembali
+                </router-link>
+              </div>
+              <div class="col-6">
+                <button
+                  class="btn btn-primary float-end"
+                  @click="submitData"
+                >
+                  Selanjutnya
+                </button>
+              </div>
+            </div>
           </div>
           <div class="col-sm-1"></div>
         </div>
@@ -245,7 +254,7 @@ export default {
       const newData = {
         ...tumpukanFields,
         id_barang: item.id,
-        // id_note: this.id_note,
+        id_note: 0,
         total: total,
       };
 
@@ -271,19 +280,6 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-      // axios
-      //   .get(`http://localhost:8000/api/auth/notes/${this.id}`, {
-      //     headers: {
-      //       Authorization: "Bearer " + localStorage.getItem("token"),
-      //     },
-      //   })
-      //   .then((response) => {
-      //     this.detailNote = response.data.data;
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
-      // console.log(this.detailNote);
     },
     submitBarang() {
       if (this.selectedBarang) {
@@ -349,8 +345,8 @@ export default {
         } else {
           console.log("success");
           this.fetchBarang();
-          const data= localStorage.getItem("note")
-          this.detailNote = JSON.parse(data);
+          const dataNote= localStorage.getItem("note")
+          this.detailNote = JSON.parse(dataNote);
         }
       })
       .catch((error) => {
