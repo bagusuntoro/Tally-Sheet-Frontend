@@ -1,7 +1,8 @@
 <script setup>
-import Sidebar from "../../components/Sidebar.vue";
+import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
+import Barcode from "../../components/QRCodeGenerator.vue";
 import { ref } from "vue";
 
 const sidebarToggled = ref(false);
@@ -25,11 +26,11 @@ const toggleSidebar = () => {
         <!-- Begin Page Content -->
         <div id="app" ref="document">
           <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-10">
+            <div class="col-1"></div>
+            <div class="col-10">
               <div class="row">
                 <div class="col-6">
-                  <router-link to="/admin-note" class="btn btn-danger mb-5"
+                  <router-link to="/user-note" class="btn btn-danger mb-5"
                     >Kembali</router-link
                   >
                 </div>
@@ -43,7 +44,7 @@ const toggleSidebar = () => {
                 </div>
               </div>
             </div>
-            <div class="col-sm-1"></div>
+            <div class="col-1"></div>
           </div>
           <div id="element-to-convert">
             <div class="text-black">
@@ -149,17 +150,18 @@ const toggleSidebar = () => {
                 <div class="col-1"></div>
                 <div class="col-10 bg-white">
                   <div class="row">
-                    <div class="col-8"></div>
-                    <div class="col-4 text-center">
-                      <p>{{ note.location }}, {{ note.date }}</p>
+                    <div class="col-1"></div>
+                    <div class="col-11">
+                      <p class="float-end">{{ note.location }}, {{ note.date }}</p>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-4 text-center">
+                    <div class="col-5 text-center">
                       <p>Supir</p>
                       <img
                         :src="note.signatures[0].supir_signature"
                         alt="tandatangan supir"
+                        class="imageCustom"
                         width="150"
                       />
                       <h5>
@@ -169,12 +171,13 @@ const toggleSidebar = () => {
                         >)
                       </h5>
                     </div>
-                    <div class="col-4"></div>
-                    <div class="col-4 text-center">
+                    <div class="col-2"></div>
+                    <div class="col-5 text-center">
                       <p>Petugas</p>
                       <img
                         :src="note.signatures[0].petugas_signature"
                         alt="tandatangan petugas"
+                        class="imageCustom"
                         width="150"
                       />
                       <h5>
@@ -188,10 +191,19 @@ const toggleSidebar = () => {
                 </div>
                 <div class="col-1"></div>
               </div>
+              
               <div class="row">
                 <div class="col-1"></div>
                 <div class="col-10 bg-white">
-                  <div class="row mt-5">
+                  <!-- qrcode -->
+                  <div class="row">
+                    <div class="col-6">
+                      <Barcode/>
+                    </div>
+                    <div class="col-6"></div>
+                  </div>
+                  <!-- keterangan cetak -->
+                  <div class="row mt-2">
                     <small>Dokument ini dicetak oleh: {{ name }}</small>
                     <small
                       >Dokument ini dicetak pada: {{ now.date }}
@@ -356,7 +368,7 @@ export default {
           localStorage.removeItem("token");
           localStorage.removeItem("expires_in");
           this.$router.push("/");
-        } else if (role !== "admin") {
+        } else if (role !== "user") {
           // If the user doesn't have admin privileges, redirect to the unauthorized page
           this.$router.push("/unauthorized");
           // console.log(response.data.role)
@@ -373,6 +385,12 @@ export default {
 };
 </script>
 <style scoped>
+@media (max-width: 768px) {
+  .imageCustom{
+    width: 100% !important;
+  }
+}
+
 .surat {
   background-color: #ffffff !important;
 }

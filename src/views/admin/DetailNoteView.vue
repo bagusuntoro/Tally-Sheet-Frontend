@@ -24,8 +24,8 @@ const toggleSidebar = () => {
 
         <!-- Begin Page Content -->
         <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <h1 class="text-center mb-3">Detail Note</h1>
             <div v-if="isLoading">Loading...</div>
             <div class="row">
@@ -61,7 +61,7 @@ const toggleSidebar = () => {
               </div>
             </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
         <!-- /.container-fluid -->
       </div>
@@ -105,7 +105,7 @@ export default {
           },
         }
       );
-      this.note.date = response.data.data.date;
+      this.note = response.data.data;
       console.log(this.note);
       this.isLoading = false;
     },

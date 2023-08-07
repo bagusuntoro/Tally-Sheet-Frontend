@@ -26,8 +26,8 @@ const toggleSidebar = () => {
         <!-- Begin Page Content -->
         <h1 class="text-center">Barang Page</h1>
         <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row mt-5">
               <div class="col-sm-3">
                 <router-link
@@ -62,18 +62,18 @@ const toggleSidebar = () => {
                     >
                       <i class="bi bi-pencil-square"></i>
                     </router-link>
-                    <!-- <button
+                    <button
                       @click="confirmDelete(item.id)"
                       class="btn btn-danger"
                     >
                       <i class="bi bi-trash3"></i>
-                    </button> -->
+                    </button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
         <!-- /.container-fluid -->
       </div>

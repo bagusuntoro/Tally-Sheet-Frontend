@@ -25,9 +25,9 @@ const toggleSidebar = () => {
         <!-- Begin Page Content -->
         <h1 class="text-center customMargin h3">Halaman Input Tumpukan</h1>
         <!-- detail -->
-        <div class="row ms-1 mt-5">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+        <div class="row mt-5">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row">
               <div class="col-4">
                 <h6>Lokasi</h6>
@@ -85,13 +85,13 @@ const toggleSidebar = () => {
               </div>
             </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
 
         <!-- barang -->
         <div class="row mt-4 ms-1">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row">
               <div class="col-sm-6">
                 <label for="barang" class="form-label">Barang</label>
@@ -185,19 +185,30 @@ const toggleSidebar = () => {
               </tbody>
             </table>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
+
+        <!-- button -->
         <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
-            <button
-              class="btn btn-primary mb-5 mt-5 float-end"
-              @click="submitData"
-            >
-              Selanjutnya
-            </button>
+          <div class="col-1"></div>
+          <div class="col-10">
+            <div class="row mb-5 mt-5">
+              <div class="col-6">
+                <router-link to="/user-input-note" class="btn btn-danger">
+                  Kembali
+                </router-link>
+              </div>
+              <div class="col-6">
+                <button
+                  class="btn btn-primary float-end"
+                  @click="submitData"
+                >
+                  Selanjutnya
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
 
         <!-- /.container-fluid -->
@@ -215,7 +226,6 @@ const toggleSidebar = () => {
 import axios from "axios";
 
 export default {
-  props: ["id"],
   data() {
     return {
       tumpukan: 0,
@@ -225,51 +235,46 @@ export default {
       headers: [], // Menyimpan nama header
       detailNote: [],
       role: null,
+      id_note:null
     };
   },
 
   methods: {
     submitData() {
-      console.log(this.dataBarang);
+    console.log(this.dataBarang);
 
-      const requestData = [];
+    const requestData = [];
 
-      this.dataBarang.forEach((item) => {
-        const tumpukanFields = {};
-        for (const header in item.tumpukan) {
-          tumpukanFields[`tumpukan_${header}`] =
-            item.tumpukan[header].join(",");
-        }
+    this.dataBarang.forEach((item) => {
+      const tumpukanFields = {};
+      for (const header in item.tumpukan) {
+        tumpukanFields[`tumpukan_${header}`] = item.tumpukan[header].join(",");
+      }
 
-        const total = this.getTotalTumpukan(item);
+      const total = this.getTotalTumpukan(item);
 
-        const newData = {
-          ...tumpukanFields,
-          id_barang: item.id,
-          id_note: this.id,
-          total: total,
-        };
+      const newData = {
+        ...tumpukanFields,
+        id_barang: item.id,
+        id_note: 0,
+        total: total,
+      };
 
-        requestData.push(newData);
+      requestData.push(newData);
+    });
+
+    const data = JSON.stringify(requestData);
+    if (requestData.length === 0) {
+      this.showAlert();
+    }
+    localStorage.setItem("tumpukans", data);
+    this.$router.push({ name: 'user-signature'});
+  },
+  showAlert() {
+      // Use sweetalert2
+      this.$swal("Data yang anda inputkan kosong !!").then(() => {
+        this.$router.push("/user-note");
       });
-
-      axios
-        .post("http://localhost:8000/api/auth/tumpukan", requestData, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.$router.push({
-            name: "user-signature",
-            params: { id: this.id },
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
     },
 
     fetchBarang() {
@@ -286,19 +291,6 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-      axios
-        .get(`http://localhost:8000/api/auth/notes/${this.id}`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((response) => {
-          this.detailNote = response.data.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      console.log(this.detailNote);
     },
     submitBarang() {
       if (this.selectedBarang) {
@@ -350,6 +342,7 @@ export default {
         this.role = response.data.role; // Get the user's role from the response
 
         const token = localStorage.getItem("token");
+        this.detailNote = localStorage.getItem("note");
         const expires_in = localStorage.getItem("expires_in");
         if (!token || !expires_in || new Date() > new Date(expires_in)) {
           // If token is missing or expired, redirect to the home page
@@ -363,6 +356,8 @@ export default {
         } else {
           console.log("success");
           this.fetchBarang();
+          const dataNote= localStorage.getItem("note")
+          this.detailNote = JSON.parse(dataNote);
         }
       })
       .catch((error) => {

@@ -79,7 +79,7 @@ const router = createRouter({
       props: true
     },
     
-
+    
     
     // users
     {
@@ -93,9 +93,9 @@ const router = createRouter({
       component: () => import('../views/user/NoteView.vue')
     },
     {
-      path: '/user-detail-note/:id', // Menambahkan parameter :id
-      name: 'user-detail-note',
-      component: () => import('../views/user/DetailNoteView.vue'),
+      path: '/user-update-note/:id', // Menambahkan parameter :id
+      name: 'user-update-note',
+      component: () => import('../views/user/UpdateNoteView.vue'),
       props: true
     },
     {
@@ -104,16 +104,16 @@ const router = createRouter({
       component: () => import('../views/user/InputNoteView.vue')
     },
     {
-      path: '/user-input-tumpukan/:id', // Menambahkan parameter :id
+      path: '/user-input-tumpukan/', // Menambahkan parameter :id
       name: 'user-input-tumpukan',
       component: () => import('../views/user/InputTumpukanView.vue'),
-      props: true
+      // props: true
     },
     {
-      path: '/user-signature/:id', // Menambahkan parameter :id
+      path: '/user-signature/', // Menambahkan parameter :id
       name: 'user-signature',
       component: () => import('../views/user/SignatureView.vue'),
-      props: true
+      // props: true
     },
 
     {
@@ -121,6 +121,24 @@ const router = createRouter({
       name: 'unauthorized',
       component: () => import('../views/Unauthorized.vue')
     },
+    {
+      path: '/user-laporan/:id',
+      name: 'user-laporan',
+      component: () => import('../views/user/Laporan.vue'),
+      props: true,
+      // alias: '/laporan' , // Path alternatif yang akan ditampilkan di browser
+    },
+    {
+      path: '/qrcode',
+      name: 'qrcode',
+      component: () => import('../views/user/QRCodeReader.vue'),
+    },
+    {
+      path: '/pdf',
+      name: 'pdf',
+      component: () => import('../views/user/Image.vue'),
+    },
+    
     
   ]
 })

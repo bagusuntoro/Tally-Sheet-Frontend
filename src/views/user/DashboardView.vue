@@ -39,7 +39,7 @@ const toggleSidebar = () => {
 
           <!-- Content Row -->
           <div class="row">
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- jumlah barang -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
@@ -48,7 +48,7 @@ const toggleSidebar = () => {
                       <div
                         class="text-xs font-weight-bold text-primary text-uppercase mb-1"
                       >
-                        Jumlah Barang
+                        Barang
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
                         40
@@ -62,7 +62,7 @@ const toggleSidebar = () => {
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- jumlah note -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
@@ -71,21 +71,21 @@ const toggleSidebar = () => {
                       <div
                         class="text-xs font-weight-bold text-success text-uppercase mb-1"
                       >
-                        Jumlah Note
+                        Note
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        215,000
+                        215
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- signature -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -119,14 +119,16 @@ const toggleSidebar = () => {
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                      <i
+                        class="fas fa-solid fa-check-double fa-2x text-gray-300"
+                      ></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Pending Requests Card Example -->
+            <!-- petugas -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
@@ -142,7 +144,8 @@ const toggleSidebar = () => {
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-comments fa-2x text-gray-300"></i>
+                      <i class="fas fa-solid fa-users fa-2x text-gray-300"></i>
+                      <!-- <i class="fas fa-comments fa-2x text-gray-300"></i> -->
                     </div>
                   </div>
                 </div>

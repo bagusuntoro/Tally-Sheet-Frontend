@@ -47,100 +47,65 @@ const toggleSidebar = () => {
                   ></vueSignature>
                 </div>
                 <div class="col-sm-5">
-                  <!-- save -->
-                  <button
-                    class="btn btn-primary w-100"
-                    type="button"
-                    @click="confirmSave"
-                  >
-                    <i class="bi bi-file-check"> Simpan</i>
-                  </button>
-                  <!-- clear -->
-                  <button
-                    class="btn btn-danger w-100"
-                    type="button"
-                    @click="clear"
-                  >
-                    <i class="bi bi-x"> Bersihkan</i>
-                  </button>
-                  <!-- undo -->
-                  <button
-                    class="btn btn-warning w-100"
-                    type="button"
-                    @click="undo"
-                  >
-                    <i class="bi bi-arrow-counterclockwise"> Kembali</i>
-                  </button>
-                  <!-- watermark -->
-                  <button
-                    class="btn btn-success w-100"
-                    type="button"
-                    @click="addWatermark"
-                  >
-                    <i class="bi bi-droplet-half"> Watermark</i>
-                  </button>
+                  <div class="text-center">
+                    <!-- save -->
+                    <button
+                      class="btn btn-primary mb-2 me-2 w-40"
+                      type="button"
+                      @click="confirmSave"
+                    >
+                      <i class="bi bi-file-check"> Simpan</i>
+                    </button>
+                    <!-- clear -->
+                    <button
+                      class="btn btn-danger mb-2 me-2 w-40"
+                      type="button"
+                      @click="clear"
+                    >
+                      <i class="bi bi-x"> Hapus</i>
+                    </button>
+                    <!-- undo -->
+                    <button
+                      class="btn btn-warning mb-2 me-2 w-40"
+                      type="button"
+                      @click="undo"
+                    >
+                      <i class="bi bi-arrow-counterclockwise"> Kembali</i>
+                    </button>
+                    <!-- watermark -->
+                    <button
+                      class="btn btn-success mb-2 me-2 w-40"
+                      type="button"
+                      @click="addWatermark"
+                    >
+                      <i class="bi bi-droplet-half"> Tandai</i>
+                    </button>
 
-                  <!-- disable -->
-                  <button
-                    class="btn btn-dark w-100"
-                    type="button"
-                    @click="toggleDisabled"
-                  >
-                    <i class="bi bi-journal-x"> Disable</i>
-                  </button>
+                    <!-- disable -->
+                    <button
+                      class="btn btn-dark mb-2 me-2 w-40"
+                      type="button"
+                      @click="toggleDisabled"
+                    >
+                      <i class="bi bi-journal-x"> Hide</i>
+                    </button>
+                  </div>
                 </div>
                 <div class="col-sm-1"></div>
               </div>
             </div>
             <div class="col-sm-1"></div>
           </div>
-          <!-- <div class="row mt-2" v-if="this.index <=1 && this.index>=0">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2">
-              <button class="btn btn-primary w-100" type="button" @click="confirmSave">
-                <i class="bi bi-file-check"></i>
-              </button>
-            </div>
-            <div class="col-sm-2">
-              <button class="btn btn-danger w-100" type="button" @click="clear">
-                <i class="bi bi-x"></i>
-              </button>
-            </div>
-            <div class="col-sm-2">
-              <button class="btn btn-warning w-100" type="button" @click="undo">
-                <i class="bi bi-arrow-counterclockwise"></i>
-              </button>
-            </div>
-            <div class="col-sm-2">
-              <button
-                class="btn btn-success w-100"
-                type="button"
-                @click="addWatermark"
-              >
-                <i class="bi bi-droplet-half"></i>
-              </button>
-            </div>
-            <div class="col-sm-2">
-              <button
-                class="btn btn-secondary w-100"
-                type="button"
-                @click="toggleDisabled"
-              >
-                <i class="bi bi-journal-x"></i>
-              </button>
-            </div>
-            <div class="col-sm-1"></div>
-          </div> -->
-
+         
           <!-- name -->
           <form
-            @submit.prevent="handleSubmit"
+            @submit.prevent="submitNote"
             enctype="multipart/form-data"
             v-if="this.index > 1"
           >
             <div class="row mt-5">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-10">
+              <div class="col-1"></div>
+              <div class="col-10">
                 <div class="mb-3">
                   <label for="petugas" class="form-label">Petugas</label>
                   <input
@@ -163,26 +128,26 @@ const toggleSidebar = () => {
                   />
                 </div>
               </div>
-              <div class="col-sm-1"></div>
+              <div class="col-1"></div>
             </div>
 
             <div class="row">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-10">
+              <div class="col-1"></div>
+              <div class="col-10">
                 <div class="row">
                   <div class="col-6">
-                    <router-link to="/admin-note" class="btn btn-danger"
-                      >Back</router-link
+                    <router-link to="/user-input-tumpukan" class="btn btn-danger"
+                      >Kembali</router-link
                     >
                   </div>
                   <div class="col-6">
                     <button type="submit" class="btn btn-primary float-end">
-                      Submit
+                      Kirim
                     </button>
                   </div>
                 </div>
               </div>
-              <div class="col-sm-1"></div>
+              <div class="col-1"></div>
             </div>
           </form>
         </div>
@@ -224,16 +189,53 @@ export default {
       signature: [],
       index: 0,
       role: null,
+      note: [],
+      tumpukans:[],
     };
   },
   methods: {
-    handleSubmit() {
+    submitNote(){
+      axios.post("http://localhost:8000/api/auth/notes/", this.note,{
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        })
+        .then((response) => {
+          this.submitTumpukans(response.data.data.id)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    submitTumpukans(id){
+      this.tumpukans.forEach((objekTumpukan) => {
+        objekTumpukan.id_note = id;
+      });
+      console.log('id: ',id)
+      console.log('id_note: ',this.tumpukans.id_note)
+      console.log('tumpukans: ',this.tumpukans)
+      axios
+        .post("http://localhost:8000/api/auth/tumpukan", this.tumpukans, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.handleSubmit(id)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    handleSubmit(id) {
       let formData = new FormData();
       formData.append("petugas", this.form.petugas);
       formData.append("petugas_signature", this.signature[0]);
       formData.append("supir", this.form.supir);
       formData.append("supir_signature", this.signature[1]);
-      formData.append("id_note", this.id);
+      formData.append("id_note", id);
       console.log(formData);
       axios
         .post("http://localhost:8000/api/auth/signatures/", formData, {
@@ -251,6 +253,8 @@ export default {
     showAlert() {
       // Use sweetalert2
       this.$swal("Data Berhasil di inputkan!!").then(() => {
+        localStorage.removeItem("note");
+        localStorage.removeItem("tumpukans");
         // Redirect to a specific page
         this.$router.push("/user-note");
       });
@@ -272,8 +276,8 @@ export default {
       });
     },
     save() {
-      this.signature[this.index]= this.$refs.signature.save("image/svg+xml");
-      // this.signature[this.index] = this.$refs.signature.save();
+      // this.signature[this.index]= this.$refs.signature.save("image/svg+xml");
+      this.signature[this.index] = this.$refs.signature.save();
       console.log("index awal :", this.index);
       console.log(
         "tandatangan :",
@@ -331,6 +335,13 @@ export default {
           // console.log(response.data.role)
         } else {
           console.log("success");
+          const note= localStorage.getItem("note")
+          this.note = JSON.parse(note);
+          const tumpukans= localStorage.getItem("tumpukans")
+          this.tumpukans = JSON.parse(tumpukans);
+
+          console.log('note: ', this.note)
+          console.log('tumpukans: ', this.tumpukans)
           
         }
       })
