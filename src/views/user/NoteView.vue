@@ -2,31 +2,31 @@
 import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const sidebarToggled = ref(false);
-const sidebarClass = ref('');
+const sidebarClass = ref("");
 
 const toggleSidebar = () => {
   sidebarToggled.value = !sidebarToggled.value;
-  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+  sidebarClass.value = sidebarToggled.value ? "toggle-sidebar" : "";
 };
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar :class="sidebarClass"/>
+    <Sidebar :class="sidebarClass" />
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar @toggle-sidebar="toggleSidebar"/>
+        <Navbar @toggle-sidebar="toggleSidebar" />
 
         <!-- Begin Page Content -->
         <h1 class="text-center h3">Halaman List Note</h1>
         <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row mt-5">
               <div class="col-sm-3">
                 <router-link class="btn btn-primary me-2" to="user-input-note">
@@ -50,13 +50,17 @@ const toggleSidebar = () => {
                   <tr v-for="(item, index) in note" :key="item.id">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ item.location }}</td>
-                    <td>{{ item.date }}</td>
+                    <td style="white-space: nowrap">{{ item.date }}</td>
                     <td>{{ item.destination }}</td>
                     <td>
-                      <button type="button" @click="detail(item.id)" class="btn btn-warning" style="float:right;">
-                        <i class="bi bi-ticket-detailed"></i>
+                      <button
+                        type="button"
+                        @click="update(item.id)"
+                        class="btn btn-warning me-2"
+                      >
+                        <i class="bi bi-pencil-square"></i>
                       </button>
-                       <router-link
+                      <router-link
                         :to="{
                           name: 'user-laporan',
                           params: { id: item.id },
@@ -65,6 +69,13 @@ const toggleSidebar = () => {
                       >
                         <i class="bi bi-download"></i>
                       </router-link>
+                      <button
+                        @click="confirmDelete(item.id)"
+                        class="btn btn-danger"
+                      >
+                        <i class="bi bi-trash3"></i>
+                      </button>
+
                       <!-- <router-link to="/laporan" class="btn btn-success me-2">Laporan Alternatif</router-link> -->
                     </td>
                   </tr>
@@ -72,7 +83,7 @@ const toggleSidebar = () => {
               </table>
             </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
 
         <!-- /.container-fluid -->
@@ -82,7 +93,6 @@ const toggleSidebar = () => {
       <!-- Footer -->
       <Footer />
       <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
   </div>
@@ -96,29 +106,30 @@ export default {
   data() {
     return {
       note: [],
-      user_id:'',
-      role: null
+      user_id: "",
+      role: null,
     };
   },
   methods: {
-    detail(id){
-      this.$router.push({ name: 'user-detail-note', params: { id: id } });
+    update(id) {
+      this.$router.push({ name: "user-update-note", params: { id: id } });
     },
     async fetchNote() {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/auth/notes-user/${this.user_id}`,{
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
+          `http://localhost:8000/api/auth/notes-user/${this.user_id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
           }
-        }
         );
         this.note = response.data.data;
       } catch (error) {
         console.error(error);
       }
     },
-    async deleteItem(id) {
+    async confirmDelete(id) {
       const result = await Swal.fire({
         title: "Apakah Anda yakin ingin menghapus data ini?",
         icon: "warning",
@@ -133,11 +144,11 @@ export default {
         // Jika user mengklik tombol "Hapus"
         // Lakukan proses delete
         axios
-          .delete(`http://localhost:8000/api/auth/notes/${id}`,{
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-          }
-        })
+          .delete(`http://localhost:8000/api/auth/notes/${id}`, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          })
           .then((response) => {
             // Berhasil dihapus dari server, lakukan aksi selanjutnya jika diperlukan
             console.log(response.data);
@@ -158,7 +169,7 @@ export default {
         });
 
         // Redirect ke halaman tertentu
-        this.$router.push("/admin-note");
+        this.$router.push("/user-note");
       }
     },
   },
@@ -186,7 +197,7 @@ export default {
           // console.log(response.data.role)
         } else {
           console.log("success");
-        this.fetchNote();
+          this.fetchNote();
         }
       })
       .catch((error) => {
@@ -198,4 +209,29 @@ export default {
 </script>
 
 <style scoped>
+/* Responsive typography */
+
+h1 {
+  font-size: 40px;
+}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 30px;
+  }
+  .custonDetail {
+    margin-right: 25px;
+  }
+}
+
+/* Flexbox for alignment */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.col-md-1,
+.col-md-10 {
+  flex: 1;
+}
 </style>

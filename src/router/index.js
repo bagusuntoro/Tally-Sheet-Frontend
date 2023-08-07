@@ -93,9 +93,9 @@ const router = createRouter({
       component: () => import('../views/user/NoteView.vue')
     },
     {
-      path: '/user-detail-note/:id', // Menambahkan parameter :id
-      name: 'user-detail-note',
-      component: () => import('../views/user/DetailNoteView.vue'),
+      path: '/user-update-note/:id', // Menambahkan parameter :id
+      name: 'user-update-note',
+      component: () => import('../views/user/UpdateNoteView.vue'),
       props: true
     },
     {
@@ -127,7 +127,17 @@ const router = createRouter({
       component: () => import('../views/user/Laporan.vue'),
       props: true,
       // alias: '/laporan' , // Path alternatif yang akan ditampilkan di browser
-    }
+    },
+    {
+      path: '/qrcode',
+      name: 'qrcode',
+      component: () => import('../views/user/QRCodeReader.vue'),
+    },
+    {
+      path: '/pdf',
+      name: 'pdf',
+      component: () => import('../views/user/Image.vue'),
+    },
     
     
   ]

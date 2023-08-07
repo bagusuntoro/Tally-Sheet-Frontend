@@ -25,9 +25,9 @@ const toggleSidebar = () => {
         <!-- Begin Page Content -->
         <h1 class="text-center customMargin h3">Halaman Input Tumpukan</h1>
         <!-- detail -->
-        <div class="row ms-1 mt-5">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+        <div class="row mt-5">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row">
               <div class="col-4">
                 <h6>Lokasi</h6>
@@ -85,13 +85,13 @@ const toggleSidebar = () => {
               </div>
             </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
 
         <!-- barang -->
         <div class="row mt-4 ms-1">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row">
               <div class="col-sm-6">
                 <label for="barang" class="form-label">Barang</label>
@@ -185,11 +185,13 @@ const toggleSidebar = () => {
               </tbody>
             </table>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
+
+        <!-- button -->
         <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row mb-5 mt-5">
               <div class="col-6">
                 <router-link to="/user-input-note" class="btn btn-danger">
@@ -206,7 +208,7 @@ const toggleSidebar = () => {
               </div>
             </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
 
         <!-- /.container-fluid -->
@@ -262,9 +264,18 @@ export default {
     });
 
     const data = JSON.stringify(requestData);
+    if (requestData.length === 0) {
+      this.showAlert();
+    }
     localStorage.setItem("tumpukans", data);
     this.$router.push({ name: 'user-signature'});
   },
+  showAlert() {
+      // Use sweetalert2
+      this.$swal("Data yang anda inputkan kosong !!").then(() => {
+        this.$router.push("/user-note");
+      });
+    },
 
     fetchBarang() {
       console.log("tesss id :", this.id);

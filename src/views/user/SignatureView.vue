@@ -104,8 +104,8 @@ const toggleSidebar = () => {
             v-if="this.index > 1"
           >
             <div class="row mt-5">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-10">
+              <div class="col-1"></div>
+              <div class="col-10">
                 <div class="mb-3">
                   <label for="petugas" class="form-label">Petugas</label>
                   <input
@@ -128,12 +128,12 @@ const toggleSidebar = () => {
                   />
                 </div>
               </div>
-              <div class="col-sm-1"></div>
+              <div class="col-1"></div>
             </div>
 
             <div class="row">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-10">
+              <div class="col-1"></div>
+              <div class="col-10">
                 <div class="row">
                   <div class="col-6">
                     <router-link to="/user-input-tumpukan" class="btn btn-danger"
@@ -147,7 +147,7 @@ const toggleSidebar = () => {
                   </div>
                 </div>
               </div>
-              <div class="col-sm-1"></div>
+              <div class="col-1"></div>
             </div>
           </form>
         </div>

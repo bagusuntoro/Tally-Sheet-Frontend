@@ -26,8 +26,8 @@ const toggleSidebar = () => {
         <h1 class="text-center mt-3 mb-5">Update Data Barang</h1>
         <form @submit.prevent="updateBarang">
           <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
+            <div class="col-1"></div>
+            <div class="col-10">
               <div class="mb-3">
                 <label for="jenis_barang" class="form-label"
                   >Jenis Barang</label
@@ -41,22 +41,22 @@ const toggleSidebar = () => {
                 />
               </div>
             </div>
-            <div class="col-sm-2"></div>
+            <div class="col-1"></div>
           </div>
 
           <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
+            <div class="col-1"></div>
+            <div class="col-10">
               <div class="row">
-                <div class="col-sm-6">
+                <div class="col-6">
                   <router-link
                     to="/admin-barang"
-                    class="btn btn-danger mb-5"
+                    class="btn btn-danger"
                   >
                     Kembali
                   </router-link>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-6">
                   <button
                     type="submit"
                     class="btn btn-primary float-end"
@@ -66,7 +66,7 @@ const toggleSidebar = () => {
                 </div>
               </div>
             </div>
-            <div class="col-sm-2"></div>
+            <div class="col-1"></div>
           </div>
         </form>
         <!-- /.container-fluid -->

@@ -27,8 +27,8 @@ const toggleSidebar = () => {
         <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
           <div class="headerNote">
             <div class="row">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-10">
+              <div class="col-1"></div>
+              <div class="col-10">
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
@@ -39,6 +39,7 @@ const toggleSidebar = () => {
                         id="location"
                         placeholder="input barang"
                         v-model="form.location"
+                        required
                       />
                     </div>
                   </div>
@@ -51,6 +52,7 @@ const toggleSidebar = () => {
                         id="no_truck"
                         placeholder="input barang"
                         v-model="form.no_truck"
+                        required
                       />
                     </div>
                   </div>
@@ -65,7 +67,7 @@ const toggleSidebar = () => {
                         class="form-control"
                         id="date"
                         placeholder="input date"
-                        v-model="now.date"
+                        v-model="form.date"
                         :max="now.date"
                         :min="now.date"
                       />
@@ -80,6 +82,7 @@ const toggleSidebar = () => {
                         id="driver"
                         placeholder="input driver"
                         v-model="form.driver"
+                        required
                       />
                     </div>
                   </div>
@@ -97,6 +100,7 @@ const toggleSidebar = () => {
                         id="no_container"
                         placeholder="input nomor container"
                         v-model="form.no_container"
+                        required
                       />
                     </div>
                   </div>
@@ -109,6 +113,7 @@ const toggleSidebar = () => {
                         id="telp"
                         placeholder="input telp"
                         v-model="form.telp"
+                        required
                       />
                     </div>
                   </div>
@@ -124,6 +129,7 @@ const toggleSidebar = () => {
                         id="no_seal"
                         placeholder="input nomor seal"
                         v-model="form.no_seal"
+                        required
                       />
                     </div>
                   </div>
@@ -138,6 +144,7 @@ const toggleSidebar = () => {
                         id="destination"
                         placeholder="input nomor destination"
                         v-model="form.destination"
+                        required
                       />
                     </div>
                   </div>
@@ -158,7 +165,7 @@ const toggleSidebar = () => {
                   </div>
                 </div>
               </div>
-              <div class="col-sm-1"></div>
+              <div class="col-1"></div>
             </div>
           </div>
         </form>
@@ -215,8 +222,18 @@ export default {
     },
     handleSubmit() {
       const data = JSON.stringify(this.form)
+      if (!data) {
+        this.showAlert();
+      }
       localStorage.setItem('note', data);
+      console.log('test data: ',this.form)
       this.$router.push({ name: 'user-input-tumpukan'});
+    },
+    showAlert() {
+      // Use sweetalert2
+      this.$swal("Data yang anda inputkan kosong !!").then(() => {
+        this.$router.push("/user-note");
+      });
     },
   },
   created() {
@@ -229,6 +246,8 @@ export default {
       .then((response) => {
         this.role = response.data.role; // Get the user's role from the response
         this.form.user_id = response.data.id;
+
+        console.log('test user id: ',this.form.user_id)
 
         const token = localStorage.getItem("token");
         const expires_in = localStorage.getItem("expires_in");
@@ -244,7 +263,10 @@ export default {
         } else {
           console.log("success");
           const data= localStorage.getItem("note")
-          this.form = JSON.parse(data);
+          if(data){
+            this.form = JSON.parse(data);
+            this.form.user_id = response.data.id;
+          }
         }
       })
       .catch((error) => {

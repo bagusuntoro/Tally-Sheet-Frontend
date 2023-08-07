@@ -26,8 +26,8 @@ const toggleSidebar = () => {
         <h1 class="text-center customMargin">Input Data Barang</h1>
         <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
           <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
+            <div class="col-1"></div>
+            <div class="col-10">
               <div class="mb-3">
                 <label for="barang" class="form-label">Jenis Barang</label>
                 <input
@@ -39,32 +39,31 @@ const toggleSidebar = () => {
                 />
               </div>
             </div>
-            <div class="col-sm-2"></div>
+            <div class="col-1"></div>
           </div>
 
           <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
+            <div class="col-1"></div>
+            <div class="col-10">
               <div class="row">
-                <div class="col-sm-6">
+                <div class="col-6">
                   <router-link
                     to="/admin-barang"
-                    class="btn btn-danger mb-5"
+                    class="btn btn-danger"
                     >Kembali</router-link
                   >
                 </div>
-                <div class="col-sm-6">
+                <div class="col-6">
                   <button
                     type="submit"
-                    class="btn btn-primary"
-                    style="float:right"
+                    class="btn btn-primary float-end"
                   >
                     Kirim
                   </button>
                 </div>
               </div>
             </div>
-            <div class="col-sm-2"></div>
+            <div class="col-1"></div>
           </div>
         </form>
         <!-- /.container-fluid -->

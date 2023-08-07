@@ -25,14 +25,10 @@ const toggleSidebar = () => {
         <!-- Begin Page Content -->
         <h1 class="text-center">Note Page</h1>
         <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10">
+          <div class="col-1"></div>
+          <div class="col-10">
             <div class="row mt-5">
-              <div class="col-sm-3">
-                <!-- <router-link class="btn btn-primary me-2" to="admin-input-note">
-                  <i class="bi bi-plus"></i>
-                </router-link> -->
-              </div>
+              <div class="col-sm-3"></div>
               <div class="col-sm-9"></div>
             </div>
             <div class="table-responsive">
@@ -50,36 +46,44 @@ const toggleSidebar = () => {
                   <tr v-for="(item, index) in note" :key="item.id">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ item.location }}</td>
-                    <td>{{ item.date }}</td>
+                    <td style="white-space: nowrap">{{ item.date }}</td>
                     <td>{{ item.destination }}</td>
                     <td>
-                      <router-link
-                        :to="{
-                          name: 'admin-detailNote',
-                          params: { id: item.id },
-                        }"
-                        class="btn btn-primary me-2"
-                      >
-                        <i class="bi bi-ticket-detailed"></i>
-                      </router-link>
-                      <router-link
-                        :to="{
-                          name: 'admin-updateNote',
-                          params: { id: item.id },
-                        }"
-                        class="btn btn-warning me-2"
-                      >
-                        <i class="bi bi-pencil-square"></i>
-                      </router-link>
-                      <router-link
-                        :to="{
-                          name: 'admin-laporan',
-                          params: { id: item.id },
-                        }"
-                        class="btn btn-success me-2"
-                      >
-                        <i class="bi bi-download"></i>
-                      </router-link>
+                      <div class="row">
+                        <div class="col-4">
+                          <router-link
+                            :to="{
+                              name: 'admin-detailNote',
+                              params: { id: item.id },
+                            }"
+                            class="btn btn-primary custonDetail"
+                          >
+                            <i class="bi bi-ticket-detailed"></i>
+                          </router-link>
+                        </div>
+                        <div class="col-4">
+                          <router-link
+                            :to="{
+                              name: 'admin-updateNote',
+                              params: { id: item.id },
+                            }"
+                            class="btn btn-warning custonDetail"
+                          >
+                            <i class="bi bi-pencil-square"></i>
+                          </router-link>
+                        </div>
+                        <div class="col-4">
+                          <router-link
+                            :to="{
+                              name: 'admin-laporan',
+                              params: { id: item.id },
+                            }"
+                            class="btn btn-success custonDetail"
+                          >
+                            <i class="bi bi-download"></i>
+                          </router-link>
+                        </div>
+                      </div>
                       <!-- <button @click="deleteItem(item.id)" class="btn btn-danger">
                         <i class="bi bi-trash3"></i>
                       </button> -->
@@ -89,7 +93,7 @@ const toggleSidebar = () => {
               </table>
             </div>
           </div>
-          <div class="col-sm-1"></div>
+          <div class="col-1"></div>
         </div>
         <!-- /.container-fluid -->
       </div>
@@ -206,4 +210,15 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  font-size: 40px;
+}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 30px;
+  }
+  .custonDetail{
+    margin-right: 25px;
+  }
+}
 </style>
