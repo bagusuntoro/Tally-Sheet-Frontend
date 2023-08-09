@@ -52,31 +52,37 @@ const toggleSidebar = () => {
                     <td>{{ item.location }}</td>
                     <td style="white-space: nowrap">{{ item.date }}</td>
                     <td>{{ item.destination }}</td>
-                    <td>
-                      <button
-                        type="button"
-                        @click="update(item.id)"
-                        class="btn btn-warning me-2"
-                      >
-                        <i class="bi bi-pencil-square"></i>
-                      </button>
-                      <router-link
-                        :to="{
-                          name: 'user-laporan',
-                          params: { id: item.id },
-                        }"
-                        class="btn btn-success me-2"
-                      >
-                        <i class="bi bi-download"></i>
-                      </router-link>
-                      <button
-                        @click="confirmDelete(item.id)"
-                        class="btn btn-danger"
-                      >
-                        <i class="bi bi-trash3"></i>
-                      </button>
-
-                      <!-- <router-link to="/laporan" class="btn btn-success me-2">Laporan Alternatif</router-link> -->
+                    <td class="pe-5">
+                      <div class="row">
+                        <div class="col-4">
+                          <button
+                            type="button"
+                            @click="update(item.id)"
+                            class="btn btn-warning"
+                          >
+                            <i class="bi bi-pencil-square"></i>
+                          </button>
+                        </div>
+                        <div class="col-4">
+                          <router-link
+                            :to="{
+                              name: 'user-laporan',
+                              params: { id: item.id },
+                            }"
+                            class="btn btn-success custonDetail"
+                          >
+                            <i class="bi bi-download"></i>
+                          </router-link>
+                        </div>
+                        <div class="col-4">
+                          <button
+                            @click="confirmDelete(item.id)"
+                            class="btn btn-danger custonDetail"
+                          >
+                            <i class="bi bi-trash3"></i>
+                          </button>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -219,8 +225,11 @@ h1 {
     font-size: 30px;
   }
   .custonDetail {
-    margin-right: 25px;
+    margin-right: 70px !important;
   }
+}
+.custonDetail {
+  margin-right: -70px;
 }
 
 /* Flexbox for alignment */

@@ -120,6 +120,7 @@ export default {
           // Redirect ke halaman tertentu
           localStorage.removeItem("token");
           localStorage.removeItem("expires_in");
+          localStorage.removeItem("note");
           this.$router.push("/"); // or the desired redirect route
         })
         .catch((error) => {

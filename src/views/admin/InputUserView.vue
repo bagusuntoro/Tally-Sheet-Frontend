@@ -39,6 +39,26 @@ const toggleSidebar = () => {
                 />
               </div>
               <div class="mb-3">
+                <label for="nama" class="form-label">Lokasi</label>
+                <select
+                      v-model="selectedLokasi"
+                      class="form-select"
+                      aria-label="Default select example"
+                    >
+                      <option disabled>Pilih Lokasi</option>
+                      <option
+                        v-for="item in lokasi"
+                        :key="item.id"
+                        :value="{
+                          kodeData: item.kodeData,
+                          namaData: item.namaData,
+                        }"
+                      >
+                        {{ item.namaData }}
+                      </option>
+                    </select>
+              </div>
+              <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
                 <input
                   type="number"
@@ -125,17 +145,32 @@ export default {
     return {
       form: {
         name: "",
+        kodeData: "",
+        namaData: "",
+        lokasi: "",
         nik: "",
         telp: "",
         email: "",
         password: "",
       },
+      lokasi: [],
+      selectedLokasi: []
     };
   },
   methods: {
+    async dataLokasi() {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lokasi`);
+        this.lokasi = response.data.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     handleSubmit() {
       let formData = new FormData();
       formData.append("name", this.form.name);
+      formData.append("kodeLokasi", this.selectedLokasi.kodeData);
+      formData.append("namaLokasi", this.selectedLokasi.namaData);
       formData.append("nik", this.form.nik);
       formData.append("telp", this.form.telp);
       formData.append("email", this.form.email);
@@ -183,7 +218,7 @@ export default {
           // If the user doesn't have admin privileges, redirect to the unauthorized page
           this.$router.push("/unauthorized");
         } else {
-          console.log("success");
+          this.dataLokasi();
         }
       })
       .catch((error) => {

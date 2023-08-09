@@ -46,6 +46,7 @@ const toggleSidebar = () => {
                   <tr>
                     <th scope="col">No</th>
                     <th scope="col">Nama</th>
+                    <th scope="col">Lokasi</th>
                     <th scope="col">NIK</th>
                     <th scope="col">Telp</th>
                     <th scope="col">Email</th>
@@ -56,6 +57,7 @@ const toggleSidebar = () => {
                   <tr v-for="(item, index) in user" :key="item.id">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ item.name }}</td>
+                    <td>{{ item.namaLokasi }}</td>
                     <td>{{ item.nik }}</td>
                     <td>{{ item.telp }}</td>
                     <td>{{ item.email }}</td>

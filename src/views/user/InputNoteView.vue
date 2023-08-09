@@ -2,25 +2,25 @@
 import Sidebar from "../../components/Sidebar-User.vue";
 import Navbar from "../../components/Navbar.vue";
 import Footer from "../../components/Footer.vue";
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const sidebarToggled = ref(false);
-const sidebarClass = ref('');
+const sidebarClass = ref("");
 
 const toggleSidebar = () => {
   sidebarToggled.value = !sidebarToggled.value;
-  sidebarClass.value = sidebarToggled.value ? 'toggle-sidebar' : '';
+  sidebarClass.value = sidebarToggled.value ? "toggle-sidebar" : "";
 };
 </script>
 <template>
   <div id="wrapper">
-    <Sidebar :class="sidebarClass"/>
+    <Sidebar :class="sidebarClass" />
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <Navbar @toggle-sidebar="toggleSidebar"/>
+        <Navbar @toggle-sidebar="toggleSidebar" />
 
         <!-- Begin Page Content -->
         <h1 class="text-center customMargin h3">Halaman Input Note</h1>
@@ -29,6 +29,27 @@ const toggleSidebar = () => {
             <div class="row">
               <div class="col-1"></div>
               <div class="col-10">
+                <div class="row mb-3">
+                  <label for="nama" class="form-label">Keteragan</label>
+                  <select
+                    v-model="selectedKeterangan"
+                    class="form-select"
+                    aria-label="Default select example"
+                    required
+                  >
+                    <option disabled>Pilih Keterangan</option>
+                    <option
+                      v-for="item in keterangan"
+                      :key="item.id"
+                      :value="{
+                        id: item.id,
+                        keterangan: item.keterangan,
+                      }"
+                    >
+                      {{ item.keterangan }}
+                    </option>
+                  </select>
+                </div>
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
@@ -37,9 +58,10 @@ const toggleSidebar = () => {
                         type="text"
                         class="form-control"
                         id="location"
-                        placeholder="input barang"
+                        placeholder="input lokasi"
                         v-model="form.location"
                         required
+                        :disabled="true"
                       />
                     </div>
                   </div>
@@ -66,7 +88,7 @@ const toggleSidebar = () => {
                         type="date"
                         class="form-control"
                         id="date"
-                        placeholder="input date"
+                        placeholder="input tanggal"
                         v-model="form.date"
                         :max="now.date"
                         :min="now.date"
@@ -135,9 +157,7 @@ const toggleSidebar = () => {
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label for="destination" class="form-label"
-                        >Tujuan</label
-                      >
+                      <label for="destination" class="form-label">Tujuan</label>
                       <input
                         type="text"
                         class="form-control"
@@ -152,14 +172,16 @@ const toggleSidebar = () => {
 
                 <div class="row">
                   <div class="col-6">
-                    <router-link
-                      to="/user-note"
-                      class="btn btn-danger mb-5"
+                    <router-link to="/user-note" class="btn btn-danger mb-5"
                       >Kembali</router-link
                     >
                   </div>
                   <div class="col-6">
-                    <button type="submit" class="btn btn-primary" style="float:right;">
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      style="float: right"
+                    >
                       Selanjutnya
                     </button>
                   </div>
@@ -188,6 +210,8 @@ export default {
     return {
       form: {
         location: "",
+        id_keterangan: "",
+        keterangan: "",
         date: "",
         no_container: "",
         no_seal: "",
@@ -195,16 +219,26 @@ export default {
         no_truck: "",
         driver: "",
         telp: "",
-        user_id:''
+        user_id: "",
       },
       now: {},
-      role: null
+      role: null,
+      keterangan: [],
+      selectedKeterangan: []
     };
   },
   mounted() {
     this.getCurrentDateTime();
   },
   methods: {
+    async dataKeterangan() {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/keterangan`);
+        this.keterangan = response.data.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     getCurrentDateTime() {
       const date = new Date();
       const day = String(date.getDate()).padStart(2, "0");
@@ -218,16 +252,18 @@ export default {
         date: `${year}-${month}-${day}`,
         time: `${hours}:${minutes}:${seconds}`,
       };
-      this.form.date = this.now.date
+      this.form.date = this.now.date;
     },
     handleSubmit() {
-      const data = JSON.stringify(this.form)
+      this.form.id_keterangan = this.selectedKeterangan.id;
+      this.form.keterangan = this.selectedKeterangan.keterangan;
+      const data = JSON.stringify(this.form);
       if (!data) {
         this.showAlert();
       }
-      localStorage.setItem('note', data);
-      console.log('test data: ',this.form)
-      this.$router.push({ name: 'user-input-tumpukan'});
+      localStorage.setItem("note", data);
+      console.log("test data: ", this.form);
+      this.$router.push({ name: "user-input-tumpukan" });
     },
     showAlert() {
       // Use sweetalert2
@@ -246,8 +282,9 @@ export default {
       .then((response) => {
         this.role = response.data.role; // Get the user's role from the response
         this.form.user_id = response.data.id;
+        this.form.location = response.data.namaLokasi;
 
-        console.log('test user id: ',this.form.user_id)
+        console.log("test user id: ", this.form.user_id);
 
         const token = localStorage.getItem("token");
         const expires_in = localStorage.getItem("expires_in");
@@ -261,11 +298,13 @@ export default {
           this.$router.push("/unauthorized");
           // console.log(response.data.role)
         } else {
-          console.log("success");
-          const data= localStorage.getItem("note")
-          if(data){
+          this.dataKeterangan();
+          const data = localStorage.getItem("note");
+          if (data) {
             this.form = JSON.parse(data);
             this.form.user_id = response.data.id;
+            // this.selectedKeterangan.id = this.form.id_keterangan;
+            // this.selectedKeterangan.keterangan = this.form.keterangan;
           }
         }
       })

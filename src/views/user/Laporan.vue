@@ -126,7 +126,7 @@ const toggleSidebar = () => {
                           :key="item.id"
                         >
                           <th scope="row">{{ index + 1 }}</th>
-                          <td>{{ item.barang.jenis_barang }}</td>
+                          <td>{{ item.barang }}</td>
                           <td>{{ item.tumpukan_1 }}</td>
                           <td>{{ item.tumpukan_2 }}</td>
                           <td>{{ item.tumpukan_3 }}</td>

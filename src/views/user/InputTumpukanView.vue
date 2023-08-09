@@ -93,6 +93,22 @@ const toggleSidebar = () => {
           <div class="col-1"></div>
           <div class="col-10">
             <div class="row">
+              <select
+                v-model="selectedSPPG"
+                class="form-select"
+                aria-label="Default select example"
+              >
+                <option disabled>Pilih SPPG</option>
+                <option
+                  v-for="barang in listBarang"
+                  :key="barang.id"
+                  :value="barang.no_sppg"
+                >
+                  {{ barang.no_sppg }}
+                </option>
+              </select>
+            </div>
+            <div class="row">
               <div class="col-sm-6">
                 <label for="barang" class="form-label">Barang</label>
                 <div class="row">
@@ -106,12 +122,9 @@ const toggleSidebar = () => {
                       <option
                         v-for="barang in listBarang"
                         :key="barang.id"
-                        :value="{
-                          id: barang.id,
-                          jenis_barang: barang.jenis_barang,
-                        }"
+                        :value="barang.product_name"
                       >
-                        {{ barang.jenis_barang }}
+                        {{ barang.product_name }}
                       </option>
                     </select>
                   </div>
@@ -156,6 +169,7 @@ const toggleSidebar = () => {
             <table class="bordered-table table-striped m-auto">
               <thead>
                 <tr>
+                  <th>No. SPPG</th>
                   <th>Jenis Barang</th>
                   <th
                     v-for="header in headers"
@@ -169,6 +183,7 @@ const toggleSidebar = () => {
               </thead>
               <tbody>
                 <tr v-for="(item, index) in dataBarang" :key="index">
+                  <td>{{ item.id }}</td>
                   <td>{{ item.barang }}</td>
                   <td v-for="header in headers" :key="header">
                     <!-- <ul> -->
@@ -199,10 +214,7 @@ const toggleSidebar = () => {
                 </router-link>
               </div>
               <div class="col-6">
-                <button
-                  class="btn btn-primary float-end"
-                  @click="submitData"
-                >
+                <button class="btn btn-primary float-end" @click="submitData">
                   Selanjutnya
                 </button>
               </div>
@@ -235,42 +247,46 @@ export default {
       headers: [], // Menyimpan nama header
       detailNote: [],
       role: null,
-      id_note:null
+      id_note: null,
+      headers: [],
+      selectedSPPG: null,
     };
   },
 
   methods: {
     submitData() {
-    console.log(this.dataBarang);
+      console.log(this.dataBarang);
 
-    const requestData = [];
+      const requestData = [];
 
-    this.dataBarang.forEach((item) => {
-      const tumpukanFields = {};
-      for (const header in item.tumpukan) {
-        tumpukanFields[`tumpukan_${header}`] = item.tumpukan[header].join(",");
+      this.dataBarang.forEach((item) => {
+        const tumpukanFields = {};
+        for (const header in item.tumpukan) {
+          tumpukanFields[`tumpukan_${header}`] =
+            item.tumpukan[header].join(",");
+        }
+
+        const total = this.getTotalTumpukan(item);
+
+        const newData = {
+          ...tumpukanFields,
+          barang: item.barang,
+          sppg: item.id,
+          id_note: 0,
+          total: total,
+        };
+
+        requestData.push(newData);
+      });
+
+      const data = JSON.stringify(requestData);
+      if (requestData.length === 0) {
+        this.showAlert();
       }
-
-      const total = this.getTotalTumpukan(item);
-
-      const newData = {
-        ...tumpukanFields,
-        id_barang: item.id,
-        id_note: 0,
-        total: total,
-      };
-
-      requestData.push(newData);
-    });
-
-    const data = JSON.stringify(requestData);
-    if (requestData.length === 0) {
-      this.showAlert();
-    }
-    localStorage.setItem("tumpukans", data);
-    this.$router.push({ name: 'user-signature'});
-  },
-  showAlert() {
+      localStorage.setItem("tumpukans", data);
+      this.$router.push({ name: "user-signature" });
+    },
+    showAlert() {
       // Use sweetalert2
       this.$swal("Data yang anda inputkan kosong !!").then(() => {
         this.$router.push("/user-note");
@@ -278,28 +294,41 @@ export default {
     },
 
     fetchBarang() {
-      console.log("tesss id :", this.id);
+      let formData = new FormData();
+      formData.append("lokasi", this.headers.lokasi);
+      formData.append("id_keterangan", this.headers.id_keterangan);
       axios
-        .get("http://localhost:8000/api/auth/barang", {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
+        .post("http://localhost:8000/api/sppg", formData)
         .then((response) => {
           this.listBarang = response.data.data;
         })
         .catch((error) => {
           console.error(error);
         });
+
+      // console.log("tesss id :", this.id);
+      // axios
+      //   .get("http://localhost:8000/api/auth/barang", {
+      //     headers: {
+      //       Authorization: "Bearer " + localStorage.getItem("token"),
+      //     },
+      //   })
+      //   .then((response) => {
+      //     this.listBarang = response.data.data;
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
     },
     submitBarang() {
       if (this.selectedBarang) {
         this.dataBarang.push({
-          barang: this.selectedBarang.jenis_barang,
-          id: this.selectedBarang.id,
+          barang: this.selectedBarang,
+          id: this.selectedSPPG,
           tumpukan: {},
         });
         this.selectedBarang = "";
+        this.selectedSPPG = "";
       }
     },
     hitungTumpukan() {
@@ -340,6 +369,7 @@ export default {
       })
       .then((response) => {
         this.role = response.data.role; // Get the user's role from the response
+        this.headers.lokasi = response.data.kodeLokasi;
 
         const token = localStorage.getItem("token");
         this.detailNote = localStorage.getItem("note");
@@ -355,9 +385,12 @@ export default {
           // console.log(response.data.role)
         } else {
           console.log("success");
+          const dataNote = localStorage.getItem("note");
+          if (dataNote) {
+            this.detailNote = JSON.parse(dataNote);
+            this.headers.id_keterangan = this.detailNote.id_keterangan;
+          }
           this.fetchBarang();
-          const dataNote= localStorage.getItem("note")
-          this.detailNote = JSON.parse(dataNote);
         }
       })
       .catch((error) => {
